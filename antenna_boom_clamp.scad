@@ -28,8 +28,8 @@ slot_width = 1;            // Fixation slot width
 pivot_d = 3.6;             // Pivot cylinder diameter
 pivot_l = 5;               // Pivot cylinder length
 pivot_angle_cut = 90;
-m3nut = 6.2;
-m3head = 5.5;
+m3nut = 6.4;
+m3head = 5.7;
 m3screw = 3.5;
 
 /* [Quality] */
@@ -86,7 +86,7 @@ module fixation_slot(slot_width, body_length, body_height) {
 }
 
 module nut_hole(body_width, body_length, body_height) {
-    translate([-10, body_length-5, body_height+1])
+    translate([-10, body_length-5, body_height-0.5])
         rotate([0, 90, 0])
         union() {
             cylinder(d=m3nut, h=5, $fn=6);

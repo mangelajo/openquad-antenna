@@ -1,4 +1,4 @@
-// All-in-One Antenna Hub - v5
+// All-in-One Antenna Hub - v6
 // 4x antenna boom clamps arranged around a central boom collar
 // Print-in-place assembly with configurable gaps
 // EA4IPW - Parametric design
@@ -18,7 +18,7 @@ boom_spikes_dia = 8.10;     // Wire boom / spike diameter
 
 /* [Print-in-Place] */
 print_gap = 0.20;           // Z-axis gap between parts (critical for print-in-place)
-clamp_collar_gap = 0.85;    // Radial gap between collar and clamp front
+clamp_collar_gap = 0.70;    // Radial gap between collar and clamp front
 
 // ============================================================
 // DESIGN CONSTANTS (structural/hardware, rarely changed)
@@ -34,7 +34,7 @@ ear_length = 10;             // Clamp ear Y extent
 
 /* [Main Body Constants] */
 fillet_r = 0.5;              // Main body fillet radius
-boom_around = 3;             // Collar wall thickness around main boom
+boom_around = 3;             // Collar total growth beyond boom (wall = boom_around/2 per side)
 body_height = 2.3;           // Base plate thickness
 bs_holder_thickness = 1.5;   // Pivot frame plate thickness
 collar_above_clamp = 3.3;    // Collar extends this far above clamp attachment
@@ -52,8 +52,11 @@ $fn = 80;
 // Never set these manually — change the inputs above instead.
 // ============================================================
 
-function boom_dia_eff() =
-    boom_is_round ? boom_dia : boom_side * sqrt(2);
+// --- Boom dimension (replaces boom_dia_eff) ---
+boom_dim = boom_is_round ? boom_dia : boom_side;
+
+// --- Square collar around main boom ---
+collar_side = boom_dim + boom_around;
 
 // --- Clamp body dimensions (scale with boom_spikes_dia) ---
 clamp_body_height = boom_spikes_dia + 2 * clamp_wall;
@@ -68,26 +71,29 @@ bs_holder_width = clamp_body_width + 2 * print_gap;
 
 // --- Clamp placement offsets ---
 clamp_z_offset = body_height + fillet_r + print_gap + clamp_body_height;
-clamp_y_offset = (boom_dia_eff() + boom_around) / 2 + clamp_collar_gap;
+clamp_y_offset = collar_side / 2 + clamp_collar_gap;
 
 // --- Base plate diameter ---
 body_side = 2 * (clamp_y_offset + clamp_body_length/2 + base_plate_margin);
 
 // --- Pivot hole in pivot frame (derived from clamp placement + pivot geometry) ---
 pivot_hole_dia  = pivot_d + 2 * pivot_clearance;
+// Pivot Y/Z in absolute coords, then made relative to bs_holder origin
 pivot_hole_h    = clamp_z_offset - pivot_d/2 - body_height;
-pivot_hole_dist = pivot_d/2 + clamp_y_offset - boom_dia_eff()/6;
+pivot_hole_dist = pivot_d/2 + clamp_y_offset;
 
 // ============================================================
 // MODULES
 // ============================================================
 
 module _body() {
+    cs_raw = collar_side - 2*fillet_r;
     union() {
-        // Base plate
+        // Base plate (circular)
         cylinder(d=body_side - 2*fillet_r, h=body_height - fillet_r);
-        // Collar around main boom
-        cylinder(d=boom_dia_eff() + boom_around - 2*fillet_r, h=body_height + boom_around_h - fillet_r*2);
+        // Collar (square prism, centered) — more material at corners
+        translate([-cs_raw/2, -cs_raw/2, 0])
+            cube([cs_raw, cs_raw, body_height + boom_around_h - fillet_r*2]);
     }
 }
 
@@ -103,21 +109,21 @@ module boom_hole() {
     if (boom_is_round) {
         cylinder(h=boom_around_h + body_height + fillet_r, d=boom_dia);
     } else {
-        // Square boom: cut tall enough to go through collar
-        translate([0, 0, (boom_around_h + body_height)/2])
+        // Square boom hole through the square collar
+        translate([0, 0, (boom_around_h + body_height) / 2])
             cube([boom_side, boom_side, (boom_around_h + body_height) * 3], center=true);
     }
 }
 
 module bs_holder() {
-    // Pivot frame: two vertical plates that straddle the clamp
-    // The boom_dia_eff()/6 offset avoids generating geometry inside
-    // the collar (it gets cut by boom_hole anyway)
-    translate([-bs_holder_thickness/2, boom_dia_eff()/6, body_height])
+    // Pivot frame: two vertical plates that straddle the clamp body.
+    // Plates start from center (y=0) and extend to base plate edge.
+    // The collar and boom_hole handle the inner portions.
+    translate([-bs_holder_thickness/2, 0, body_height])
     difference() {
         union() {
             eff_width = bs_holder_width + fillet_r*2;
-            eff_depth = (body_side - boom_dia_eff() + boom_around*2) / 2;
+            eff_depth = body_side / 2;
             // Left plate
             translate([-eff_width/2 - bs_holder_thickness/2, 0, 0])
                 cube([bs_holder_thickness, eff_depth, bs_holder_height - fillet_r]);
