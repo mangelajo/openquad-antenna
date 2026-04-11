@@ -45,12 +45,12 @@ pivot_d = 3.6;               // Pivot cylinder diameter (on clamp)
 pivot_clearance = 0.7;       // Radial clearance around pivot in hole
 
 /* [Lock Detent Constants] */
-lock_bump_dia = 2.0;            // Diameter of locking bump sphere
-lock_bump_protrusion = 0.5;     // How far bump extends beyond clamp body surface
+lock_bump_dia = 4.0;            // Diameter of locking bump sphere
+lock_bump_protrusion = 1.5;     // How far bump extends beyond clamp body surface
 lock_radius = 6;                // Distance from pivot center to bump center
 lock_angle_open = 75;           // Angle at open (print) position (degrees)
-lock_indent_dia = 2.5;          // Indent cylinder diameter (slightly larger than bump for clearance)
-lock_indent_depth = 0.8;        // Indent depth into plate
+lock_indent_dia = 4.5;          // Indent sphere diameter (slightly larger than bump for clearance)
+lock_indent_depth = 1.8;        // Indent depth into plate
 
 /* [Quality] */
 $fn = 80;

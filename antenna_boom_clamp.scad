@@ -10,7 +10,7 @@
 // ============================================================
 
 /* [Type] */
-near_boom_version = true; // Near-boom version adds pivots for all_in_one assembly
+near_boom_version = false; // Near-boom version adds pivots for all_in_one assembly
 
 /* [Boom] */
 boom_spikes_dia = 8.10;   // Wire boom / spike diameter
@@ -21,7 +21,7 @@ clamp_width_extra = 0.35;  // Extra wall per side on width (M3 clearance)
 fillet_r = 2;              // Edge rounding radius
 ear_drop = 3;              // Clamping ear extension below body
 ear_length = 10;           // Y extent of clamping ear
-body_length = 25;          // Y axis (front to rear)
+body_length = 35;          // Y axis (front to rear)
 
 /* [Hardware] */
 slot_width = 1;            // Fixation slot width
@@ -33,8 +33,8 @@ m3head = 5.7;
 m3screw = 3.5;
 
 /* [Lock Detent] */
-lock_bump_dia = 2.0;            // Diameter of locking bump sphere
-lock_bump_protrusion = 0.5;     // How far bump extends beyond body surface
+lock_bump_dia = 4.0;            // Diameter of locking bump sphere
+lock_bump_protrusion = 1.5;     // How far bump extends beyond body surface
 lock_radius = 6;                // Distance from pivot center to bump center
 lock_angle_open = 75;           // Angle at open (print) position (degrees from pivot)
 
