@@ -11,6 +11,7 @@
 
 /* [Type] */
 near_boom_version = false; // Near-boom version adds pivots for all_in_one assembly
+driver_element = true;    // Driver element: 45° wire exit holes for soldering (no horizontal wire hole)
 
 /* [Boom] */
 boom_spikes_dia = 8.10;   // Wire boom / spike diameter
@@ -22,6 +23,10 @@ fillet_r = 2;              // Edge rounding radius
 ear_drop = 3;              // Clamping ear extension below body
 ear_length = 10;           // Y extent of clamping ear
 body_length = 35;          // Y axis (front to rear)
+
+/* [Wire] */
+wire_dia = 4;              // Wire pass-through hole diameter (0 to disable)
+wire_from_back = 5;        // Distance from back of body to wire hole center
 
 /* [Hardware] */
 slot_width = 1;            // Fixation slot width
@@ -88,6 +93,27 @@ module clamp_boom_hole_insert(body_length, body_height, boom_dia) {
     translate([0, body_length, body_height/2])
         rotate([90, 0, 0])
         cylinder(d1=boom_dia+1, d2=boom_dia, h=1);
+}
+
+module wire_hole(body_width, body_length, body_height, wire_dia, wire_from_back, slot_width, driver_element) {
+    if (wire_dia > 0) {
+        if (driver_element) {
+            // Driver element: 45° angled holes on each side of the slot.
+            // Each hole starts at boom center height near the slot,
+            // angles outward (±X) and downward (-Z) at 45° for soldering.
+            for (side = [1, -1]) {
+                translate([0, wire_from_back+5, body_height*1.2])
+                    rotate([0, 0, side > 0 ? 180 : 0])   // point toward +X or -X
+                    rotate([side>0?-20:20, 145, 0])                     // tilt 45° downward
+                    cylinder(d=wire_dia, h=body_width*2, center=false);
+            }
+        } else {
+            // Regular element: horizontal wire pass-through + vertical exit holes
+            translate([0, wire_from_back, body_height/2])
+                rotate([0, 90, 0])
+                cylinder(d=wire_dia, h=body_width + 20, center=true);
+        }
+    }
 }
 
 module fixation_slot(slot_width, body_length, body_height) {
@@ -172,8 +198,11 @@ module antenna_boom_clamp(
         }
         clamp_boom_hole(_bh, body_length, boom_dia, ear_drop, fillet_r);
         clamp_boom_hole_insert(body_length, _bh, boom_dia);
+       
         if (near_boom_version) {
             back_bend_insert(slot_width, body_length);
+        } else {
+             wire_hole(_bw, body_length, _bh, wire_dia, wire_from_back, slot_width, driver_element);
         }
         fixation_slot(slot_width, body_length, _bh);
         nut_hole(_bw, body_length, _bh);
