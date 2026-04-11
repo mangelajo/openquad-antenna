@@ -32,6 +32,12 @@ m3nut = 6.4;
 m3head = 5.7;
 m3screw = 3.5;
 
+/* [Lock Detent] */
+lock_bump_dia = 2.0;            // Diameter of locking bump sphere
+lock_bump_protrusion = 0.5;     // How far bump extends beyond body surface
+lock_radius = 6;                // Distance from pivot center to bump center
+lock_angle_open = 75;           // Angle at open (print) position (degrees from pivot)
+
 /* [Quality] */
 $fn = 80;
 
@@ -40,6 +46,10 @@ $fn = 80;
 // ============================================================
 body_height = boom_spikes_dia + 2 * clamp_wall;
 body_width  = boom_spikes_dia + 2 * (clamp_wall + clamp_width_extra);
+
+// Lock bump position in clamp local frame (YZ, relative to pivot center)
+lock_y_open = pivot_d/2 + lock_radius * cos(lock_angle_open);
+lock_z_open = pivot_d/2 + lock_radius * sin(lock_angle_open);
 
 // ============================================================
 // MODULES
@@ -112,6 +122,16 @@ module back_bend_insert(slot_width, body_length) {
         cube([slot_width, body_length/3, 20]);
 }
 
+module lock_bump(body_width, lock_y, lock_z, bump_dia, bump_protrusion) {
+    // Spherical bumps on both sides of the body near the pivot.
+    // The sphere center is shifted inside the body so only
+    // bump_protrusion extends past the body surface.
+    for (side = [1, -1]) {
+        translate([side * (body_width/2 - bump_dia/2 + bump_protrusion), lock_y, lock_z])
+            sphere(d=bump_dia);
+    }
+}
+
 // ============================================================
 // MAIN MODULE
 // All parameters have defaults matching the file-level derived
@@ -125,21 +145,29 @@ module antenna_boom_clamp(
     fillet_r = 2,
     boom_dia = 8.10,
     ear_drop = 3,
-    ear_length = 10
+    ear_length = 10,
+    lock_y = undef,
+    lock_z = undef,
+    lock_bump_dia = 2.0,
+    lock_bump_protrusion = 0.5
 ) {
     // Use file-level derived values when called standalone (undef)
     _bw = (body_width == undef)  ? boom_dia + 2*(clamp_wall + clamp_width_extra) : body_width;
     _bh = (body_height == undef) ? boom_dia + 2*clamp_wall : body_height;
+    _ly = (lock_y == undef) ? lock_y_open : lock_y;
+    _lz = (lock_z == undef) ? lock_z_open : lock_z;
 
     difference() {
         union() {
             clamp_body(_bw, body_length, _bh, fillet_r, ear_drop, ear_length);
-            // Near-boom version adds pivots for all_in_one assembly
+            // Near-boom version adds pivots + lock bumps for all_in_one assembly
             if (near_boom_version) {
                 translate([_bw/2, 0, 0]) pivot(fillet_r);
                 translate([0, pivot_d, 0])
                     rotate([0, 0, 180])
                     translate([_bw/2, 0, 0]) pivot(fillet_r);
+                // Detent bumps on both sides for snap-fit locking
+                lock_bump(_bw, _ly, _lz, lock_bump_dia, lock_bump_protrusion);
             }
         }
         clamp_boom_hole(_bh, body_length, boom_dia, ear_drop, fillet_r);

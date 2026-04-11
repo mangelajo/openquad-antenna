@@ -18,7 +18,7 @@ boom_spikes_dia = 8.10;     // Wire boom / spike diameter
 
 /* [Print-in-Place] */
 print_gap = 0.20;           // Z-axis gap between parts (critical for print-in-place)
-clamp_collar_gap = 0.70;    // Radial gap between collar and clamp front
+clamp_collar_gap = 0.85;    // Radial gap between collar and clamp front
 
 // ============================================================
 // DESIGN CONSTANTS (structural/hardware, rarely changed)
@@ -43,6 +43,14 @@ base_plate_margin = 2.2;     // Base plate extends beyond clamp attachment point
 /* [Pivot Constants] */
 pivot_d = 3.6;               // Pivot cylinder diameter (on clamp)
 pivot_clearance = 0.7;       // Radial clearance around pivot in hole
+
+/* [Lock Detent Constants] */
+lock_bump_dia = 2.0;            // Diameter of locking bump sphere
+lock_bump_protrusion = 0.5;     // How far bump extends beyond clamp body surface
+lock_radius = 6;                // Distance from pivot center to bump center
+lock_angle_open = 75;           // Angle at open (print) position (degrees)
+lock_indent_dia = 2.5;          // Indent cylinder diameter (slightly larger than bump for clearance)
+lock_indent_depth = 0.8;        // Indent depth into plate
 
 /* [Quality] */
 $fn = 80;
@@ -81,6 +89,21 @@ pivot_hole_dia  = pivot_d + 2 * pivot_clearance;
 // Pivot Y/Z in absolute coords, then made relative to bs_holder origin
 pivot_hole_h    = clamp_z_offset - pivot_d/2 - body_height;
 pivot_hole_dist = pivot_d/2 + clamp_y_offset;
+
+// --- Lock detent positions ---
+// Bump position in clamp local frame (pivot center at pivot_d/2, pivot_d/2)
+lock_y_open = pivot_d/2 + lock_radius * cos(lock_angle_open);
+lock_z_open = pivot_d/2 + lock_radius * sin(lock_angle_open);
+// 90° closed position (clamp rotated -90° in local frame = +90° physical fold-up)
+lock_angle_closed = lock_angle_open - 90;
+lock_y_closed = pivot_d/2 + lock_radius * cos(lock_angle_closed);
+lock_z_closed = pivot_d/2 + lock_radius * sin(lock_angle_closed);
+// Indent positions in arm coords (after rotate[0,180,0] + translate)
+// The rotate flips Z, so z_assembly = clamp_z_offset - z_local
+indent_0_y = clamp_y_offset + lock_y_open;
+indent_0_z = clamp_z_offset - lock_z_open;
+indent_90_y = clamp_y_offset + lock_y_closed;
+indent_90_z = clamp_z_offset - lock_z_closed;
 
 // ============================================================
 // MODULES
@@ -138,6 +161,21 @@ module bs_holder() {
     }
 }
 
+module lock_indents() {
+    // Cylindrical indents on inner face of each plate at 0° and 90° positions.
+    // Cut these AFTER minkowski to get clean cavities.
+    for (side = [1, -1]) {
+        // Spherical indents — smooth engagement ramp, self-centering with spherical bumps.
+        // Sphere center at the plate inner face so it cuts a hemisphere into the plate.
+        // 0° (open/print) position
+        translate([side * (bs_holder_width/2 + lock_indent_depth - lock_indent_dia/2), indent_0_y, indent_0_z])
+            sphere(d=lock_indent_dia);
+        // 90° (closed) position
+        translate([side * (bs_holder_width/2 + lock_indent_depth - lock_indent_dia/2), indent_90_y, indent_90_z])
+            sphere(d=lock_indent_dia);
+    }
+}
+
 // ============================================================
 // ASSEMBLY
 // ============================================================
@@ -150,10 +188,16 @@ difference() {
         for (i = [0:3]) {
             rotate([0, 0, i * 90])
                 union() {
-                    minkowski() {
-                        bs_holder();
-                        sphere(r = fillet_r);
+                    // Pivot frame with lock indents cut after minkowski
+                    difference() {
+                        minkowski() {
+                            bs_holder();
+                            sphere(r = fillet_r);
+                        }
+                        lock_indents();
                     }
+                    // Pivoting clamp with lock bumps
+                    
                     translate([0, clamp_y_offset, clamp_z_offset])
                         rotate([0, 180, 0])
                         antenna_boom_clamp(
@@ -164,8 +208,13 @@ difference() {
                             body_length   = clamp_body_length,
                             fillet_r      = clamp_fillet_r,
                             ear_drop      = ear_drop,
-                            ear_length    = ear_length
+                            ear_length    = ear_length,
+                            lock_y        = lock_y_open,
+                            lock_z        = lock_z_open,
+                            lock_bump_dia = lock_bump_dia,
+                            lock_bump_protrusion = lock_bump_protrusion
                         );
+                        
                 }
         }
     }
