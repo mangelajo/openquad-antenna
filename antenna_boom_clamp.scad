@@ -148,10 +148,10 @@ module antenna_boom_clamp(
     ear_length = 10,
     lock_y = undef,
     lock_z = undef,
-    lock_bump_dia = 2.0,
-    lock_bump_protrusion = 0.5
+    lock_d = 4.0,
+    lock_p = 1.5
 ) {
-    // Use file-level derived values when called standalone (undef)
+    // undef params fall back to file-level derived values for standalone use.
     _bw = (body_width == undef)  ? boom_dia + 2*(clamp_wall + clamp_width_extra) : body_width;
     _bh = (body_height == undef) ? boom_dia + 2*clamp_wall : body_height;
     _ly = (lock_y == undef) ? lock_y_open : lock_y;
@@ -167,7 +167,7 @@ module antenna_boom_clamp(
                     rotate([0, 0, 180])
                     translate([_bw/2, 0, 0]) pivot(fillet_r);
                 // Detent bumps on both sides for snap-fit locking
-                lock_bump(_bw, _ly, _lz, lock_bump_dia, lock_bump_protrusion);
+                lock_bump(_bw, _ly, _lz, lock_d, lock_p);
             }
         }
         clamp_boom_hole(_bh, body_length, boom_dia, ear_drop, fillet_r);
@@ -183,4 +183,13 @@ module antenna_boom_clamp(
 // ============================================================
 // STANDALONE RENDER (for Customizer / direct rendering)
 // ============================================================
-antenna_boom_clamp(near_boom_version=near_boom_version);
+antenna_boom_clamp(
+    near_boom_version = near_boom_version,
+    boom_dia      = boom_spikes_dia,
+    body_length   = body_length,
+    fillet_r      = fillet_r,
+    ear_drop      = ear_drop,
+    ear_length    = ear_length,
+    lock_d        = lock_bump_dia,
+    lock_p        = lock_bump_protrusion
+);

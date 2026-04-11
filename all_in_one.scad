@@ -211,8 +211,8 @@ difference() {
                             ear_length    = ear_length,
                             lock_y        = lock_y_open,
                             lock_z        = lock_z_open,
-                            lock_bump_dia = lock_bump_dia,
-                            lock_bump_protrusion = lock_bump_protrusion
+                            lock_d = lock_bump_dia,
+                            lock_p = lock_bump_protrusion
                         );
                         
                 }
