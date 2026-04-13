@@ -11,7 +11,7 @@
 
 /* [Type] */
 near_boom_version = false; // Near-boom version adds pivots for all_in_one assembly
-driver_element = true;    // Driver element: 45° wire exit holes for soldering (no horizontal wire hole)
+driver_element = false;    // Driver element: 45° wire exit holes for soldering (no horizontal wire hole)
 
 /* [Boom] */
 boom_spikes_dia = 8.10;   // Wire boom / spike diameter
@@ -22,11 +22,14 @@ clamp_width_extra = 0.35;  // Extra wall per side on width (M3 clearance)
 fillet_r = 2;              // Edge rounding radius
 ear_drop = 3;              // Clamping ear extension below body
 ear_length = 10;           // Y extent of clamping ear
-body_length = 35;          // Y axis (front to rear)
+ear_slot_width=0.6;        // ear slot width, don't make too wide (1mm) to avoid cracks when tightening the screw
+body_length = 30;          // Y axis (front to rear)
 
 /* [Wire] */
 wire_dia = 4;              // Wire pass-through hole diameter (0 to disable)
 wire_from_back = 5;        // Distance from back of body to wire hole center
+wire_exit_angle = 35;      // Driver: angle from vertical toward the side (degrees)
+wire_spread_angle = 20;    // Driver: Y-axis spread between the two exits (degrees)
 
 /* [Hardware] */
 slot_width = 1;            // Fixation slot width
@@ -98,14 +101,17 @@ module clamp_boom_hole_insert(body_length, body_height, boom_dia) {
 module wire_hole(body_width, body_length, body_height, wire_dia, wire_from_back, slot_width, driver_element) {
     if (wire_dia > 0) {
         if (driver_element) {
-            // Driver element: 45° angled holes on each side of the slot.
-            // Each hole starts at boom center height near the slot,
-            // angles outward (±X) and downward (-Z) at 45° for soldering.
+            // Driver element: angled holes on each side of the slot.
+            // Each hole starts above boom center, angles outward (±X)
+            // and downward (-Z) for pulling wires out for soldering.
+            // wire_exit_angle: 0=straight down, 90=horizontal
+            // wire_spread_angle: Y-axis spread between the two exits
             for (side = [1, -1]) {
-                translate([0, wire_from_back+5, body_height*1.2])
-                    rotate([0, 0, side > 0 ? 180 : 0])   // point toward +X or -X
-                    rotate([side>0?-20:20, 145, 0])                     // tilt 45° downward
-                    cylinder(d=wire_dia, h=body_width*2, center=false);
+                translate([0, wire_from_back * 2, -body_height*0.2])
+                    rotate([0, 0, side < 0 ? 180 : 0])
+                    rotate([side < 0 ? -wire_spread_angle : wire_spread_angle,
+                            wire_exit_angle, 0])
+                    cylinder(d=wire_dia, h=body_width * 2, center=false);
             }
         } else {
             // Regular element: horizontal wire pass-through + vertical exit holes
@@ -125,9 +131,9 @@ module nut_hole(body_width, body_length, body_height) {
     translate([-10, body_length-5, body_height-0.5])
         rotate([0, 90, 0])
         union() {
-            cylinder(d=m3nut, h=5, $fn=6);
+            cylinder(d=m3nut, h=6, $fn=6);
             cylinder(d=m3screw, h=body_width*2);
-            translate([0, 0, body_width])
+            translate([0, 0, body_width-1])
                 cylinder(d=m3head, h=5);
         }
 }
@@ -204,14 +210,15 @@ module antenna_boom_clamp(
         } else {
              wire_hole(_bw, body_length, _bh, wire_dia, wire_from_back, slot_width, driver_element);
         }
-        fixation_slot(slot_width, body_length, _bh);
+        fixation_slot(slot_width, body_length-ear_length, _bh);
+        translate([0,body_length-ear_length,0]) fixation_slot(ear_slot_width, ear_length, _bh);
         nut_hole(_bw, body_length, _bh);
     }
 }
 
 // ============================================================
 // STANDALONE RENDER (for Customizer / direct rendering)
-// ============================================================
+// ============================================tra================
 antenna_boom_clamp(
     near_boom_version = near_boom_version,
     boom_dia      = boom_spikes_dia,
