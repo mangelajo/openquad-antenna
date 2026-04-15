@@ -1,0 +1,38 @@
+name: Build STL models
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - '.github/workflows/build-stl.yml'
+  pull_request:
+    paths:
+      - 'src/**'
+      - '.github/workflows/build-stl.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install OpenSCAD
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openscad xvfb
+
+      - name: Build STLs
+        run: |
+          mkdir -p build
+          xvfb-run -a openscad -o build/all_in_one.stl src/all_in_one.scad
+          xvfb-run -a openscad -o build/driven_element.stl \
+            -D 'driver_element=true' src/antenna_boom_clamp.scad
+          xvfb-run -a openscad -o build/regular_wire_clamp.stl \
+            -D 'driver_element=false' src/antenna_boom_clamp.scad
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: stls
+          path: build/*.stl
