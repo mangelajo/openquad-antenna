@@ -16,7 +16,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      OPENSCAD_APPIMAGE_URL: https://files.openscad.org/snapshots/OpenSCAD-2025.01.06.ai25654-x86_64.AppImage
+      OPENSCAD_APPIMAGE_URL: https://files.openscad.org/snapshots/OpenSCAD-2026.04.14-x86_64.AppImage
     steps:
       - uses: actions/checkout@v4
 
@@ -36,7 +36,7 @@ jobs:
       - name: Download OpenSCAD nightly
         if: steps.cache-openscad.outputs.cache-hit != 'true'
         run: |
-          curl -L -o /tmp/openscad.AppImage "$OPENSCAD_APPIMAGE_URL"
+          curl --fail -L -o /tmp/openscad.AppImage "$OPENSCAD_APPIMAGE_URL"
           chmod +x /tmp/openscad.AppImage
           sudo mv /tmp/openscad.AppImage /usr/local/bin/openscad
 
@@ -49,9 +49,9 @@ jobs:
           OSCAD="xvfb-run -a openscad --backend=manifold"
           $OSCAD -o build/all_in_one.stl src/all_in_one.scad
           $OSCAD -o build/driven_element.stl \
-            -D 'driver_element=true' src/antenna_boom_clamp.scad
+            -D 'driven_element=true' src/antenna_boom_clamp.scad
           $OSCAD -o build/regular_wire_clamp.stl \
-            -D 'driver_element=false' src/antenna_boom_clamp.scad
+            -D 'driven_element=false' src/antenna_boom_clamp.scad
 
       - uses: actions/upload-artifact@v4
         with:
