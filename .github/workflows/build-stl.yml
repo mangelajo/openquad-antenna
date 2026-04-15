@@ -19,9 +19,10 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install OpenSCAD
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y openscad xvfb
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: openscad xvfb
+          version: 1.0
 
       - name: Build STLs
         run: |
