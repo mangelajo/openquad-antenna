@@ -12,9 +12,9 @@ Las características principales del diseño son:
 
 - **Modular:** cada elemento (reflector, driven, directores) se monta sobre un *bloque* independiente que se desliza y se fija al boom. Puedes construir la antena con 2, 3, 5 , 6, 7 .. elementos usando el mismo hardware.
 - **Plegable:** los spreaders pivotan sobre el bloque, de modo que la antena puede recogerse para transporte o almacenamiento y desplegarse en segundos para operar.
-- **Escalable por banda:** el diseño paramétrico en OpenSCAD ([src/all_in_one.scad](src/all_in_one.scad)) permite ajustar el diámetro del boom y de los spreaders y regenerar la pieza para otros tamaños de boom y spreader.
+- **Escalable por banda:** el diseño paramétrico en OpenSCAD ([src/all_in_one.scad](../src/all_in_one.scad)) permite ajustar el diámetro del boom y de los spreaders y regenerar la pieza para otros tamaños de boom y spreader.
 
-- **Ajustable:** los loops se sujetan con abrazaderas impresas ([stls/regular_wire_clamp.stl](stls/regular_wire_clamp.stl)) que permiten recortar y volver a fijar el cable durante el tuning.
+- **Ajustable:** los loops se sujetan con abrazaderas impresas ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) que permiten recortar y volver a fijar el cable durante el tuning.
 
 Esta guía documenta el proceso práctico de construcción y ajuste paso a paso. Los fundamentos teóricos (origen de las fórmulas 1005/1030/975, efecto del velocity factor, rendimiento esperado, referencias bibliográficas) se tratan en un documento separado:
 
