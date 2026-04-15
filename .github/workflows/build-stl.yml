@@ -23,7 +23,7 @@ jobs:
       - name: Install apt dependencies (cached)
         uses: awalsh128/cache-apt-pkgs-action@latest
         with:
-          packages: libfuse2 xvfb
+          packages: libfuse2 xvfb libegl1 libgl1 libglu1-mesa libglib2.0-0
           version: 1.0
 
       - name: Cache OpenSCAD AppImage
@@ -49,9 +49,9 @@ jobs:
           OSCAD="xvfb-run -a openscad --backend=manifold"
           $OSCAD -o build/all_in_one.stl src/all_in_one.scad
           $OSCAD -o build/driven_element.stl \
-            -D 'driven_element=true' src/antenna_boom_clamp.scad
+            -D 'driven_element=true' src/antenna_spreader_clamp.scad
           $OSCAD -o build/regular_wire_clamp.stl \
-            -D 'driven_element=false' src/antenna_boom_clamp.scad
+            -D 'driven_element=false' src/antenna_spreader_clamp.scad
 
       - uses: actions/upload-artifact@v4
         with:
