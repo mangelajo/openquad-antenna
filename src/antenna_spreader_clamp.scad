@@ -1,5 +1,5 @@
-// Antenna Boom / Wire Clamp - v5
-// Clamp body for wire boom spikes, with optional pivots for
+// Antenna Spreader / Wire Clamp - v5
+// Clamp body for wire spreader spikes, with optional pivots for
 // print-in-place assembly in all_in_one.scad
 // EA4IPW - Parametric design
 
@@ -11,13 +11,13 @@
 
 /* [Type] */
 near_boom_version = false; // Near-boom version adds pivots for all_in_one assembly
-driver_element = false;    // Driver element: 45° wire exit holes for soldering (no horizontal wire hole)
+driven_element = false;    // Driven element: 45° wire exit holes for soldering (no horizontal wire hole)
 
-/* [Boom] */
-boom_spikes_dia = 8.10;   // Wire boom / spike diameter
+/* [Spreader] */
+spreader_spikes_dia = 8.10;   // Wire spreader / spike diameter
 
 /* [Design Constants] */
-clamp_wall = 3;            // Wall thickness around boom
+clamp_wall = 3;            // Wall thickness around spreader
 clamp_width_extra = 0.35;  // Extra wall per side on width (M3 clearance)
 fillet_r = 2;              // Edge rounding radius
 ear_drop = 3;              // Clamping ear extension below body
@@ -50,10 +50,10 @@ lock_angle_open = 75;           // Angle at open (print) position (degrees from 
 $fn = 80;
 
 // ============================================================
-// DERIVED (from boom_spikes_dia + constants)
+// DERIVED (from spreader_spikes_dia + constants)
 // ============================================================
-body_height = boom_spikes_dia + 2 * clamp_wall;
-body_width  = boom_spikes_dia + 2 * (clamp_wall + clamp_width_extra);
+body_height = spreader_spikes_dia + 2 * clamp_wall;
+body_width  = spreader_spikes_dia + 2 * (clamp_wall + clamp_width_extra);
 
 // Lock bump position in clamp local frame (YZ, relative to pivot center)
 lock_y_open = pivot_d/2 + lock_radius * cos(lock_angle_open);
@@ -84,25 +84,25 @@ module clamp_body(body_width, body_length, body_height, fillet_r, ear_drop, ear_
         }
 }
 
-module clamp_boom_hole(body_height, body_length, boom_dia, ear_drop, fillet_r) {
-    // Horizontal hole for wire boom, through the body center
+module clamp_spreader_hole(body_height, body_length, spreader_dia, ear_drop, fillet_r) {
+    // Horizontal hole for wire spreader, through the body center
     translate([0, 5, body_height/2])
         rotate([90, 0, 180])
-        cylinder(d=boom_dia, h=body_height + ear_drop + 40);
+        cylinder(d=spreader_dia, h=body_height + ear_drop + 40);
 }
 
-module clamp_boom_hole_insert(body_length, body_height, boom_dia) {
-    // Chamfered entry for boom insertion
+module clamp_spreader_hole_insert(body_length, body_height, spreader_dia) {
+    // Chamfered entry for spreader insertion
     translate([0, body_length, body_height/2])
         rotate([90, 0, 0])
-        cylinder(d1=boom_dia+1, d2=boom_dia, h=1);
+        cylinder(d1=spreader_dia+1, d2=spreader_dia, h=1);
 }
 
-module wire_hole(body_width, body_length, body_height, wire_dia, wire_from_back, slot_width, driver_element) {
+module wire_hole(body_width, body_length, body_height, wire_dia, wire_from_back, slot_width, driven_element) {
     if (wire_dia > 0) {
-        if (driver_element) {
+        if (driven_element) {
             // Driver element: angled holes on each side of the slot.
-            // Each hole starts above boom center, angles outward (±X)
+            // Each hole starts above spreader center, angles outward (±X)
             // and downward (-Z) for pulling wires out for soldering.
             // wire_exit_angle: 0=straight down, 90=horizontal
             // wire_spread_angle: Y-axis spread between the two exits
@@ -169,13 +169,13 @@ module lock_bump(body_width, lock_y, lock_z, bump_dia, bump_protrusion) {
 // All parameters have defaults matching the file-level derived
 // values. When called from all_in_one.scad, pass overrides.
 // ============================================================
-module antenna_boom_clamp(
+module antenna_spreader_clamp(
     near_boom_version = true,
     body_width = undef,
     body_length = 25,
     body_height = undef,
     fillet_r = 2,
-    boom_dia = 8.10,
+    spreader_dia = 8.10,
     ear_drop = 3,
     ear_length = 10,
     lock_y = undef,
@@ -184,8 +184,8 @@ module antenna_boom_clamp(
     lock_p = 1.5
 ) {
     // undef params fall back to file-level derived values for standalone use.
-    _bw = (body_width == undef)  ? boom_dia + 2*(clamp_wall + clamp_width_extra) : body_width;
-    _bh = (body_height == undef) ? boom_dia + 2*clamp_wall : body_height;
+    _bw = (body_width == undef)  ? spreader_dia + 2*(clamp_wall + clamp_width_extra) : body_width;
+    _bh = (body_height == undef) ? spreader_dia + 2*clamp_wall : body_height;
     _ly = (lock_y == undef) ? lock_y_open : lock_y;
     _lz = (lock_z == undef) ? lock_z_open : lock_z;
 
@@ -202,13 +202,13 @@ module antenna_boom_clamp(
                 lock_bump(_bw, _ly, _lz, lock_d, lock_p);
             }
         }
-        clamp_boom_hole(_bh, body_length, boom_dia, ear_drop, fillet_r);
-        clamp_boom_hole_insert(body_length, _bh, boom_dia);
-       
+        clamp_spreader_hole(_bh, body_length, spreader_dia, ear_drop, fillet_r);
+        clamp_spreader_hole_insert(body_length, _bh, spreader_dia);
+
         if (near_boom_version) {
             back_bend_insert(slot_width, body_length);
         } else {
-             wire_hole(_bw, body_length, _bh, wire_dia, wire_from_back, slot_width, driver_element);
+             wire_hole(_bw, body_length, _bh, wire_dia, wire_from_back, slot_width, driven_element);
         }
         fixation_slot(slot_width, body_length-ear_length, _bh);
         translate([0,body_length-ear_length,0]) fixation_slot(ear_slot_width, ear_length, _bh);
@@ -219,9 +219,9 @@ module antenna_boom_clamp(
 // ============================================================
 // STANDALONE RENDER (for Customizer / direct rendering)
 // ============================================tra================
-antenna_boom_clamp(
+antenna_spreader_clamp(
     near_boom_version = near_boom_version,
-    boom_dia      = boom_spikes_dia,
+    spreader_dia  = spreader_spikes_dia,
     body_length   = body_length,
     fillet_r      = fillet_r,
     ear_drop      = ear_drop,

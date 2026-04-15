@@ -180,7 +180,7 @@ module lock_indents() {
 // ASSEMBLY
 // ============================================================
 
-use <antenna_boom_clamp.scad>
+use <antenna_spreader_clamp.scad>
 
 difference() {
     union() {
@@ -200,9 +200,9 @@ difference() {
                     
                     translate([0, clamp_y_offset, clamp_z_offset])
                         rotate([0, 180, 0])
-                        antenna_boom_clamp(
+                        antenna_spreader_clamp(
                             near_boom_version = true,
-                            boom_dia      = boom_spikes_dia,
+                            spreader_dia  = boom_spikes_dia,
                             body_height   = clamp_body_height,
                             body_width    = clamp_body_width,
                             body_length   = clamp_body_length,
