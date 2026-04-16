@@ -14,9 +14,15 @@ near_boom_version = false; // Near-boom version adds pivots for all_in_one assem
 driven_element = false;    // Driven element: 45° wire exit holes for soldering (no horizontal wire hole)
 
 /* [Spreader] */
-spreader_spikes_dia = 8.10;   // Wire spreader / spike diameter
+spreaders_dia = 8.10;   // Wire spreader / spike diameter
 
-/* [Design Constants] */
+// ============================================================
+// DESIGN CONSTANTS (structural/hardware, rarely changed)
+// Hidden from the customizer — edit here in source if needed.
+// ============================================================
+
+// Design Constants
+/* [Hidden] */
 clamp_wall = 3;            // Wall thickness around spreader
 clamp_width_extra = 0.35;  // Extra wall per side on width (M3 clearance)
 fillet_r = 2;              // Edge rounding radius
@@ -25,13 +31,15 @@ ear_length = 10;           // Y extent of clamping ear
 ear_slot_width=0.6;        // ear slot width, don't make too wide (1mm) to avoid cracks when tightening the screw
 body_length = 30;          // Y axis (front to rear)
 
-/* [Wire] */
+// Wire
+/* [Hidden] */
 wire_dia = 4;              // Wire pass-through hole diameter (0 to disable)
 wire_from_back = 5;        // Distance from back of body to wire hole center
 wire_exit_angle = 35;      // Driver: angle from vertical toward the side (degrees)
 wire_spread_angle = 20;    // Driver: Y-axis spread between the two exits (degrees)
 
-/* [Hardware] */
+// Hardware
+/* [Hidden] */
 slot_width = 1;            // Fixation slot width
 pivot_d = 3.6;             // Pivot cylinder diameter
 pivot_l = 5;               // Pivot cylinder length
@@ -40,20 +48,22 @@ m3nut = 6.4;
 m3head = 5.7;
 m3screw = 3.5;
 
-/* [Lock Detent] */
+// Lock Detent
+/* [Hidden] */
 lock_bump_dia = 4.0;            // Diameter of locking bump sphere
 lock_bump_protrusion = 1.5;     // How far bump extends beyond body surface
 lock_radius = 6;                // Distance from pivot center to bump center
 lock_angle_open = 75;           // Angle at open (print) position (degrees from pivot)
 
-/* [Quality] */
+// Quality
+/* [Hidden] */
 $fn = 80;
 
 // ============================================================
-// DERIVED (from spreader_spikes_dia + constants)
+// DERIVED (from spreaders_dia + constants)
 // ============================================================
-body_height = spreader_spikes_dia + 2 * clamp_wall;
-body_width  = spreader_spikes_dia + 2 * (clamp_wall + clamp_width_extra);
+body_height = spreaders_dia + 2 * clamp_wall;
+body_width  = spreaders_dia + 2 * (clamp_wall + clamp_width_extra);
 
 // Lock bump position in clamp local frame (YZ, relative to pivot center)
 lock_y_open = pivot_d/2 + lock_radius * cos(lock_angle_open);
@@ -221,7 +231,7 @@ module antenna_spreader_clamp(
 // ============================================tra================
 antenna_spreader_clamp(
     near_boom_version = near_boom_version,
-    spreader_dia  = spreader_spikes_dia,
+    spreader_dia  = spreaders_dia,
     body_length   = body_length,
     fillet_r      = fillet_r,
     ear_drop      = ear_drop,

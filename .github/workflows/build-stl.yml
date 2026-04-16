@@ -48,19 +48,19 @@ jobs:
       - name: Ensure executable
         run: sudo chmod +x /usr/local/bin/openscad
 
-      - name: Build STLs
-        run: make OPENSCAD="xvfb-run -a openscad"
+      - name: Build STL matrix and zips
+        run: make -j4 zip OPENSCAD="xvfb-run -a openscad"
 
       - uses: actions/upload-artifact@v4
         with:
-          name: stls
-          path: build/*.stl
+          name: stl-zips
+          path: build/*.zip
 
-      - name: Upload STLs to release
+      - name: Upload zips to release
         if: github.event_name == 'release'
         run: |
-          for stl in build/*.stl; do
-            gh release upload "${{ github.event.release.tag_name }}" "$stl" --clobber
+          for zip in build/*.zip; do
+            gh release upload "${{ github.event.release.tag_name }}" "$zip" --clobber
           done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

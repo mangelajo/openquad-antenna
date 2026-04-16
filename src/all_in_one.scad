@@ -3,7 +3,7 @@
 // Print-in-place assembly with configurable gaps
 // EA4IPW - Parametric design
 //
-// Change boom_spikes_dia or boom_dia and everything scales:
+// Change spreaders_dia or boom_dia and everything scales:
 // clamp body, collar, pivot holes, plate spacing, base plate.
 
 // ============================================================
@@ -14,17 +14,20 @@
 boom_is_round = true;
 boom_dia = 15.9;            // Main boom tube diameter
 boom_side = 15.1;           // Main boom tube side (square boom)
-boom_spikes_dia = 8.10;     // Wire boom / spike diameter
-
-/* [Print-in-Place] */
-print_gap = 0.20;           // Z-axis gap between parts (critical for print-in-place)
-clamp_collar_gap = 0.85;    // Radial gap between collar and clamp front
+spreaders_dia = 8.10;       // Wire spreaders diameter
 
 // ============================================================
 // DESIGN CONSTANTS (structural/hardware, rarely changed)
+// Hidden from the customizer — edit here in source if needed.
 // ============================================================
 
-/* [Clamp Constants] */
+// Print-in-Place
+/* [Hidden] */
+print_gap = 0.20;           // Z-axis gap between parts (critical for print-in-place)
+clamp_collar_gap = 0.85;    // Radial gap between collar and clamp front
+
+// Clamp Constants
+/* [Hidden] */
 clamp_wall = 3;              // Wall thickness around boom in clamp
 clamp_width_extra = 0.35;    // Extra wall per side on width (M3 hardware clearance)
 clamp_fillet_r = 2;          // Clamp edge rounding
@@ -32,7 +35,8 @@ clamp_body_length = 25;      // Clamp total length (Y axis)
 ear_drop = 3;                // Clamp ear extension below body (M3 hardware, fixed)
 ear_length = 10;             // Clamp ear Y extent
 
-/* [Main Body Constants] */
+// Main Body Constants
+/* [Hidden] */
 fillet_r = 0.5;              // Main body fillet radius
 boom_around = 3;             // Collar total growth beyond boom (wall = boom_around/2 per side)
 body_height = 2.3;           // Base plate thickness
@@ -40,11 +44,13 @@ bs_holder_thickness = 1.5;   // Pivot frame plate thickness
 collar_above_clamp = 3.3;    // Collar extends this far above clamp attachment
 base_plate_margin = 2.2;     // Base plate extends beyond clamp attachment point
 
-/* [Pivot Constants] */
+// Pivot Constants
+/* [Hidden] */
 pivot_d = 3.6;               // Pivot cylinder diameter (on clamp)
 pivot_clearance = 0.7;       // Radial clearance around pivot in hole
 
-/* [Lock Detent Constants] */
+// Lock Detent Constants
+/* [Hidden] */
 lock_bump_dia = 4.0;            // Diameter of locking bump sphere
 lock_bump_protrusion = 1.5;     // How far bump extends beyond clamp body surface
 lock_radius = 6;                // Distance from pivot center to bump center
@@ -52,7 +58,8 @@ lock_angle_open = 75;           // Angle at open (print) position (degrees)
 lock_indent_dia = 4.5;          // Indent sphere diameter (slightly larger than bump for clearance)
 lock_indent_depth = 1.8;        // Indent depth into plate
 
-/* [Quality] */
+// Quality
+/* [Hidden] */
 $fn = 80;
 
 // ============================================================
@@ -66,9 +73,9 @@ boom_dim = boom_is_round ? boom_dia : boom_side;
 // --- Square collar around main boom ---
 collar_side = boom_dim + boom_around;
 
-// --- Clamp body dimensions (scale with boom_spikes_dia) ---
-clamp_body_height = boom_spikes_dia + 2 * clamp_wall;
-clamp_body_width  = boom_spikes_dia + 2 * (clamp_wall + clamp_width_extra);
+// --- Clamp body dimensions (scale with spreaders_dia) ---
+clamp_body_height = spreaders_dia + 2 * clamp_wall;
+clamp_body_width  = spreaders_dia + 2 * (clamp_wall + clamp_width_extra);
 
 // --- Collar and pivot frame height ---
 boom_around_h = fillet_r + print_gap + clamp_body_height + collar_above_clamp;
@@ -202,7 +209,7 @@ difference() {
                         rotate([0, 180, 0])
                         antenna_spreader_clamp(
                             near_boom_version = true,
-                            spreader_dia  = boom_spikes_dia,
+                            spreader_dia  = spreaders_dia,
                             body_height   = clamp_body_height,
                             body_width    = clamp_body_width,
                             body_length   = clamp_body_length,
