@@ -211,4 +211,103 @@ VHF/UHF に有効なスナップオンフェライトの例：Fair-Rite 04431642
 
 ---
 
+## 7. 事前ビルド済みパーツ
+
+リリースごとに、CI が最も一般的なブームとスプレッダーサイズの STL を事前レンダリングして公開します。各組み合わせは、3 つの印刷可能パーツ（`all_in_one`, `driven_element`, `regular_wire_clamp`）と PNG プレビューを含む単一の zip として配布されます。お使いのハードウェアに合う組み合わせをダウンロードして、すぐに印刷を開始できます — OpenSCAD は不要です。
+
+事前レンダリングされた組み合わせがどれもハードウェアに合わない場合は、下の [§ 7.4](#74-カスタム-サイズをビルドする) を参照して自分でレンダリングしてください。
+
+### 7.1. オールインワン ブロック（ブーム カラー + 4 つのクランプ）
+
+行：ブーム形状 × ブーム寸法、列：スプレッダー径。
+
+| ブーム \ スプレッダー | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **丸 14.9 mm** | <img src="images/generated/r_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **丸 15.9 mm** | <img src="images/generated/r_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **丸 19.9 mm** | <img src="images/generated/r_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s8.10_all_in_one.png" width="180"/> |
+| **角 14.9 mm** | <img src="images/generated/s_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **角 15.9 mm** | <img src="images/generated/s_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **角 19.9 mm** | <img src="images/generated/s_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s8.10_all_in_one.png" width="180"/> |
+
+### 7.2. スプレッダー クランプ
+
+この 2 つのパーツはスプレッダー径のみに依存します（ブームの形状や寸法は関係ありません）。各 3 種類のバリエーションのみです。
+
+| スプレッダー | 励振エレメント | ワイヤクランプ（寄生） |
+|---|---|---|
+| **4.05 mm** | <img src="images/generated/r_b14.9_s4.05_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s4.05_regular_wire_clamp.png" width="180"/> |
+| **6.07 mm** | <img src="images/generated/r_b14.9_s6.07_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_regular_wire_clamp.png" width="180"/> |
+| **8.10 mm** | <img src="images/generated/r_b14.9_s8.10_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_regular_wire_clamp.png" width="180"/> |
+
+### 7.3. ダウンロード
+
+各リンクは、その組み合わせの 3 つの STL と PNG プレビューを含む zip です。常に **最新のリリース** を取得します。
+
+| ブーム \ スプレッダー | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **丸 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_8.10mm.zip) |
+| **丸 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_8.10mm.zip) |
+| **丸 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_8.10mm.zip) |
+| **角 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_8.10mm.zip) |
+| **角 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_8.10mm.zip) |
+| **角 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_8.10mm.zip) |
+
+### 7.4. カスタム サイズをビルドする
+
+事前レンダリング済みの組み合わせがどれもハードウェアに合わない（または他の直径を試したい）場合は、自分でパーツをレンダリングできます。通常変更する 3 つのパラメータはすべて [src/all_in_one.scad](../src/all_in_one.scad) ファイルにあります：
+
+- `boom_is_round` — 丸パイプの場合 `true`、角パイプの場合 `false`。
+- `boom_dia`（丸）**または** `boom_side`（角）— ブームの外寸（mm）。
+- `spreaders_dia` — スプレッダー ロッドの外径（mm）。
+
+励振エレメントと通常のワイヤクランプ（[src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad)）は `spreaders_dia` と `driven_element`（`true` / `false`）のみに依存します。
+
+> ⚠️ **スライスする前にオールインワンを視覚的にプリチェックしてください — 特にピボット部分。** このパーツはプリント・イン・プレース方式です：4 つのクランプは中央のカラーに細いピボット シリンダで取り付けられた状態で印刷され、小さなロック検出球が各クランプを開いた状態（印刷用）または折りたたんだ状態（運搬用）に保ちます。通常と異なるブームやスプレッダー サイズはジオメトリを変動させ、ピボットが融合してしまう（クランプが回転しない）またはクリアランスが大きすぎる（ロック検出が掛からない）ことがあります。OpenSCAD で **F6** を押してモデルをレンダリングし、ピボットの 1 つにズームインして以下を確認してください：
+>
+> - ピボット シリンダがその穴の中で明確なクリアランス リングを持っている — 融合した壁がない。
+> - ロック検出球が独立した特徴として見える — 周囲の材料に融合していない。
+> - クランプ本体がピボット フレーム プレートに対して連続したギャップを保っている。
+>
+> 何かが融合または厚さゼロに見える場合、調整する値は `print_gap` と `pivot_clearance` です（[src/all_in_one.scad](../src/all_in_one.scad) 上部の *Hidden* セクション内）。
+
+**オプション A — OpenSCAD GUI**
+
+1. OpenSCAD をインストールします（<https://openscad.org/downloads.html> から最新の **2026.x ナイトリー** をダウンロード — 古い安定版 2021.01 には、ここで使用される manifold バックエンドがありません）。
+2. [src/all_in_one.scad](../src/all_in_one.scad) を開きます。右側のカスタマイザ パネルには、上記の 4 つのブーム/スプレッダー パラメータのみが表示されます（モデルの他のパラメータは意図的に非表示にしています）。
+3. 値を編集し、**F5** で簡易プレビュー、続いて **F6**（時計アイコン）でフルジオメトリをレンダリングします。
+4. 検査（特にピボット — 上記の警告を参照）し、**ファイル → エクスポート → STL としてエクスポート…**。
+5. [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad) で `driven_element=true` と `driven_element=false` について繰り返します。
+
+**オプション B — CLI / Makefile**
+
+リポジトリには OpenSCAD CLI をラップした [Makefile](../Makefile) が含まれています。`openscad` が `PATH` に必要です（または `OPENSCAD=/path/to/openscad` を渡してください）。
+
+最も簡単な方法：[src/all_in_one.scad](../src/all_in_one.scad) 上部の `boom_…` / `spreaders_dia` のデフォルト値を編集し、次のように実行します：
+
+```bash
+make            # build/all_in_one.stl, build/driven_element.stl, build/regular_wire_clamp.stl をビルド
+make renders    # 800×800 PNG プレビューも生成
+```
+
+または、ソース ファイルを変更せずに `-D` オーバーライドで OpenSCAD を直接呼び出します：
+
+```bash
+openscad --backend=manifold -o my_block.stl \
+  -D 'boom_is_round=true' -D 'boom_dia=22.0' -D 'spreaders_dia=5.0' \
+  src/all_in_one.scad
+
+openscad --backend=manifold -o driven.stl \
+  -D 'driven_element=true' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+
+openscad --backend=manifold -o wire_clamp.stl \
+  -D 'driven_element=false' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+```
+
+`make help` を実行して、利用可能なすべてのターゲット（`all`, `matrix`, `zip`, `renders`, `docs-images`, `clean`）を表示します。
+
+---
+
 *73 from EA4IPW — OpenQuad v1.0*

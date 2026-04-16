@@ -211,4 +211,103 @@ L'antenna documentata come esempio in questa guida (5 elementi, 435 MHz, cavo PV
 
 ---
 
+## 7. Parti pre-costruite
+
+Il CI pubblica un set pre-renderizzato di STL per le dimensioni di boom e spreader più comuni a ogni release. Ogni combinazione è distribuita come un singolo zip contenente le tre parti stampabili (`all_in_one`, `driven_element`, `regular_wire_clamp`) più le anteprime PNG. Scarica la combinazione che corrisponde al tuo hardware e inizia a stampare — non serve OpenSCAD.
+
+Se nessuna delle combinazioni pre-renderizzate corrisponde al tuo hardware, consulta il [§ 7.4](#74-costruire-una-dimensione-personalizzata) qui sotto per renderizzare la tua.
+
+### 7.1. Blocco tutto-in-uno (collare del boom + 4 morsetti)
+
+Forma del boom × dimensione del boom come righe, diametro dello spreader come colonne.
+
+| Boom \ Spreader | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **Tondo 14.9 mm** | <img src="images/generated/r_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **Tondo 15.9 mm** | <img src="images/generated/r_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **Tondo 19.9 mm** | <img src="images/generated/r_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s8.10_all_in_one.png" width="180"/> |
+| **Quadrato 14.9 mm** | <img src="images/generated/s_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **Quadrato 15.9 mm** | <img src="images/generated/s_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **Quadrato 19.9 mm** | <img src="images/generated/s_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s8.10_all_in_one.png" width="180"/> |
+
+### 7.2. Morsetti dello spreader
+
+Queste due parti dipendono solo dal diametro dello spreader (la forma e la dimensione del boom non contano), quindi ci sono solo tre varianti di ciascuna.
+
+| Spreader | Elemento eccitato | Morsetto del filo (parassita) |
+|---|---|---|
+| **4.05 mm** | <img src="images/generated/r_b14.9_s4.05_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s4.05_regular_wire_clamp.png" width="180"/> |
+| **6.07 mm** | <img src="images/generated/r_b14.9_s6.07_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_regular_wire_clamp.png" width="180"/> |
+| **8.10 mm** | <img src="images/generated/r_b14.9_s8.10_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_regular_wire_clamp.png" width="180"/> |
+
+### 7.3. Download
+
+Ogni link è un zip con i tre STL più le anteprime PNG per quella combinazione. Punta sempre all'**ultima release**.
+
+| Boom \ Spreader | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **Tondo 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_8.10mm.zip) |
+| **Tondo 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_8.10mm.zip) |
+| **Tondo 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_8.10mm.zip) |
+| **Quadrato 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_8.10mm.zip) |
+| **Quadrato 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_8.10mm.zip) |
+| **Quadrato 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_8.10mm.zip) |
+
+### 7.4. Costruire una dimensione personalizzata
+
+Se nessuna delle combinazioni pre-renderizzate corrisponde al tuo hardware (o vuoi sperimentare con altri diametri), puoi renderizzare le parti da solo. Ci sono tre parametri che normalmente toccherai, tutti nel file [src/all_in_one.scad](../src/all_in_one.scad):
+
+- `boom_is_round` — `true` per tubo tondo, `false` per quadrato.
+- `boom_dia` (tondo) **o** `boom_side` (quadrato) — dimensione esterna del boom in mm.
+- `spreaders_dia` — diametro esterno della tua bacchetta spreader in mm.
+
+L'elemento eccitato e il morsetto del filo regolare ([src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad)) dipendono solo da `spreaders_dia` e da `driven_element` (`true` / `false`).
+
+> ⚠️ **Verifica visivamente il tutto-in-uno prima dello slicing — soprattutto i pivot.** Questa parte è print-in-place: i quattro morsetti vengono stampati già attaccati al collare centrale tramite cilindri di pivot sottili, con piccole sfere lock-detent che tengono ogni morsetto aperto (per la stampa) o piegato (per il trasporto). Dimensioni insolite di boom o spreader possono spostare la geometria abbastanza da fondere i pivot in solido (il morsetto non ruota) o aprirli troppo (il lock-detent non si aggancia). Renderizza sempre il modello con **F6** in OpenSCAD, poi zooma su uno dei pivot e conferma:
+>
+> - Il cilindro del pivot ha un anello chiaro di gioco intorno dentro al suo foro — nessuna parete fusa.
+> - Le sfere del lock-detent sono visibili come elementi distinti, non fuse con il materiale circostante.
+> - Il corpo del morsetto mantiene un gap continuo verso le piastre del telaio del pivot.
+>
+> Se qualcosa sembra fuso o a spessore zero, i valori da regolare sono `print_gap` e `pivot_clearance` (nella sezione *Hidden* vicino all'inizio di [src/all_in_one.scad](../src/all_in_one.scad)).
+
+**Opzione A — GUI di OpenSCAD**
+
+1. Installa OpenSCAD (scarica una versione **nightly 2026.x** recente da <https://openscad.org/downloads.html> — la versione stabile 2021.01 non include il backend manifold usato qui).
+2. Apri [src/all_in_one.scad](../src/all_in_one.scad). Il pannello Customizer sulla destra mostra solo i quattro parametri di boom/spreader sopra elencati (il resto dei parametri del modello è intenzionalmente nascosto).
+3. Modifica i valori, premi **F5** per un'anteprima veloce, poi **F6** (l'icona dell'orologio) per renderizzare la geometria completa.
+4. Ispeziona (soprattutto i pivot — vedi avviso sopra), poi **File → Esporta → Esporta come STL…**.
+5. Ripeti con [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad) per `driven_element=true` e `driven_element=false`.
+
+**Opzione B — CLI / Makefile**
+
+Il repository include un [Makefile](../Makefile) che racchiude la CLI di OpenSCAD. Richiede `openscad` nel tuo `PATH` (oppure passa `OPENSCAD=/percorso/a/openscad`).
+
+Il modo più semplice: modifica i valori predefiniti di `boom_…` / `spreaders_dia` all'inizio di [src/all_in_one.scad](../src/all_in_one.scad), poi:
+
+```bash
+make            # costruisce build/all_in_one.stl, build/driven_element.stl, build/regular_wire_clamp.stl
+make renders    # genera anche anteprime PNG 800×800
+```
+
+Oppure chiama OpenSCAD direttamente con override `-D`, lasciando i file sorgente intatti:
+
+```bash
+openscad --backend=manifold -o my_block.stl \
+  -D 'boom_is_round=true' -D 'boom_dia=22.0' -D 'spreaders_dia=5.0' \
+  src/all_in_one.scad
+
+openscad --backend=manifold -o driven.stl \
+  -D 'driven_element=true' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+
+openscad --backend=manifold -o wire_clamp.stl \
+  -D 'driven_element=false' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+```
+
+Esegui `make help` per vedere tutti i target disponibili (`all`, `matrix`, `zip`, `renders`, `docs-images`, `clean`).
+
+---
+
 *73 da EA4IPW — OpenQuad v1.0*

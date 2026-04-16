@@ -211,4 +211,103 @@
 
 ---
 
+## 7. 预构建零件
+
+每次发布时，CI 都会为最常见的 boom 和 spreader 尺寸预渲染一组 STL。每种组合都打包为单个 zip，包含三个可打印零件（`all_in_one`, `driven_element`, `regular_wire_clamp`）以及 PNG 预览图。下载与您硬件匹配的组合即可开始打印 — 无需 OpenSCAD。
+
+如果预渲染的组合都不符合您的硬件，请参见下方 [§ 7.4](#74-构建自定义尺寸) 自行渲染。
+
+### 7.1. 一体化模块（boom 卡环 + 4 个夹具）
+
+行为 boom 形状 × boom 尺寸，列为 spreader 直径。
+
+| Boom \ Spreader | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **圆形 14.9 mm** | <img src="images/generated/r_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **圆形 15.9 mm** | <img src="images/generated/r_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **圆形 19.9 mm** | <img src="images/generated/r_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/r_b19.9_s8.10_all_in_one.png" width="180"/> |
+| **方形 14.9 mm** | <img src="images/generated/s_b14.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b14.9_s8.10_all_in_one.png" width="180"/> |
+| **方形 15.9 mm** | <img src="images/generated/s_b15.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b15.9_s8.10_all_in_one.png" width="180"/> |
+| **方形 19.9 mm** | <img src="images/generated/s_b19.9_s4.05_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s6.07_all_in_one.png" width="180"/> | <img src="images/generated/s_b19.9_s8.10_all_in_one.png" width="180"/> |
+
+### 7.2. Spreader 夹具
+
+这两个零件仅依赖 spreader 直径（boom 的形状和尺寸无关），因此每种各只有三种变体。
+
+| Spreader | 激励单元 | 导线夹具（无源） |
+|---|---|---|
+| **4.05 mm** | <img src="images/generated/r_b14.9_s4.05_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s4.05_regular_wire_clamp.png" width="180"/> |
+| **6.07 mm** | <img src="images/generated/r_b14.9_s6.07_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s6.07_regular_wire_clamp.png" width="180"/> |
+| **8.10 mm** | <img src="images/generated/r_b14.9_s8.10_driven_element.png" width="180"/> | <img src="images/generated/r_b14.9_s8.10_regular_wire_clamp.png" width="180"/> |
+
+### 7.3. 下载
+
+每个链接是包含该组合的三个 STL 与 PNG 预览的 zip。始终从 **最新发布版** 获取。
+
+| Boom \ Spreader | 4.05 mm | 6.07 mm | 8.10 mm |
+|---|---|---|---|
+| **圆形 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_14.9mm_spreaders_8.10mm.zip) |
+| **圆形 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_15.9mm_spreaders_8.10mm.zip) |
+| **圆形 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/round_boom_19.9mm_spreaders_8.10mm.zip) |
+| **方形 14.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_14.9mm_spreaders_8.10mm.zip) |
+| **方形 15.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_15.9mm_spreaders_8.10mm.zip) |
+| **方形 19.9 mm** | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_4.05mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_6.07mm.zip) | [zip](https://github.com/mangelajo/openquad-antenna/releases/latest/download/square_boom_19.9mm_spreaders_8.10mm.zip) |
+
+### 7.4. 构建自定义尺寸
+
+如果预渲染的组合都不符合您的硬件（或者您想尝试其他直径），可以自行渲染零件。通常需要调整三个参数，都位于 [src/all_in_one.scad](../src/all_in_one.scad) 文件中：
+
+- `boom_is_round` — 圆管为 `true`，方管为 `false`。
+- `boom_dia`（圆形）**或** `boom_side`（方形）— boom 的外部尺寸（毫米）。
+- `spreaders_dia` — spreader 棒的外径（毫米）。
+
+激励单元和常规导线夹具（[src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad)）仅依赖 `spreaders_dia` 和 `driven_element`（`true` / `false`）。
+
+> ⚠️ **切片前请目视预检一体化模块 — 特别是枢轴部分。** 该零件采用 print-in-place（一次成型）方式：四个夹具通过细枢轴圆柱在打印时已与中心卡环连接，并带有小型锁定凹槽球，将每个夹具保持在打开状态（用于打印）或折叠状态（用于运输）。异常的 boom 或 spreader 尺寸可能使几何形状偏移到足以将枢轴熔合在一起（夹具无法转动），或打开过大（锁定凹槽无法卡住）。务必在 OpenSCAD 中按 **F6** 渲染模型，然后放大其中一个枢轴并确认：
+>
+> - 枢轴圆柱在其孔中有清晰的间隙环 — 没有熔合的墙壁。
+> - 锁定凹槽球作为独立特征可见 — 没有与周围材料熔合。
+> - 夹具体与枢轴框架板之间保持连续的间隙。
+>
+> 如果有任何看起来熔合或零厚度的部分，需要调整的值是 `print_gap` 和 `pivot_clearance`（位于 [src/all_in_one.scad](../src/all_in_one.scad) 顶部附近的 *Hidden* 部分）。
+
+**方案 A — OpenSCAD 图形界面**
+
+1. 安装 OpenSCAD（从 <https://openscad.org/downloads.html> 下载较新的 **2026.x 夜间版** — 旧的稳定版 2021.01 缺少此处使用的 manifold 后端）。
+2. 打开 [src/all_in_one.scad](../src/all_in_one.scad)。右侧的 Customizer 面板仅显示上述四个 boom/spreader 参数（模型的其他参数已被有意隐藏）。
+3. 编辑数值，按 **F5** 快速预览，然后按 **F6**（时钟图标）渲染完整几何形状。
+4. 检查（特别是枢轴 — 见上方警告），然后 **文件 → 导出 → 导出为 STL…**。
+5. 对 [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad) 重复操作，分别使用 `driven_element=true` 和 `driven_element=false`。
+
+**方案 B — 命令行 / Makefile**
+
+仓库附带一个 [Makefile](../Makefile)，封装了 OpenSCAD CLI。需要 `openscad` 位于您的 `PATH` 中（或传递 `OPENSCAD=/path/to/openscad`）。
+
+最简单的方法：编辑 [src/all_in_one.scad](../src/all_in_one.scad) 顶部的 `boom_…` / `spreaders_dia` 默认值，然后：
+
+```bash
+make            # 构建 build/all_in_one.stl, build/driven_element.stl, build/regular_wire_clamp.stl
+make renders    # 同时生成 800×800 PNG 预览图
+```
+
+或者直接调用 OpenSCAD 并使用 `-D` 覆盖参数，保持源文件不变：
+
+```bash
+openscad --backend=manifold -o my_block.stl \
+  -D 'boom_is_round=true' -D 'boom_dia=22.0' -D 'spreaders_dia=5.0' \
+  src/all_in_one.scad
+
+openscad --backend=manifold -o driven.stl \
+  -D 'driven_element=true' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+
+openscad --backend=manifold -o wire_clamp.stl \
+  -D 'driven_element=false' -D 'spreaders_dia=5.0' \
+  src/antenna_spreader_clamp.scad
+```
+
+运行 `make help` 查看所有可用 target（`all`, `matrix`, `zip`, `renders`, `docs-images`, `clean`）。
+
+---
+
 *73 来自 EA4IPW —— OpenQuad v1.0*
