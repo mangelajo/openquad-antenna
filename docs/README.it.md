@@ -83,13 +83,21 @@ L'alluminio è ideale: leggero, rigido e facile da lavorare. Un tubo quadrato o 
 
 Un boom di legno funziona ugualmente ma è più pesante e assorbe umidità. Il suo effetto dielettrico (εr ≈ 2) potrebbe spostare la frequenza di ~0.1% — irrilevante nella pratica.
 
-Se il boom è circolare invece che quadrato, non c'è differenza elettrica. L'unica considerazione è meccanica: assicurarsi che gli hub degli spreader rimangano fissati nella stessa orientazione angolare (vedi sezione 3.4).
+Se il boom è circolare invece che quadrato, non c'è differenza elettrica. L'unica considerazione è meccanica: assicurarsi che gli hub degli spreader rimangano fissati nella stessa orientazione angolare (vedi sezione 3.5).
 
 ### 3.3. Spreader
 
 Aste di fibra di vetro, faggio, o PVC. Devono essere di materiale non conduttore. Il diametro appropriato dipende dalla banda: in VHF/UHF, aste da 4–8 mm sono sufficienti.
 
-### 3.4. Allineamento degli elementi
+### 3.4. Viteria e ritenzione
+
+Ogni elemento richiede una piccola quantità di viteria standard per chiudere le clamp sugli spreader e tenere il blocco print-in-place ripiegato durante il trasporto:
+
+- **Viti a brugola (hex socket cap) M3 × 12 mm — 4 per elemento.** Una per ogni clamp di spreader; stringono le due metà della clamp attorno all'asta. La lunghezza di 12 mm è dimensionata per uno **spreader da 8 mm** — spreader più sottili (4–6 mm) usano un corpo clamp più fine e possono richiedere una vite più corta (M3×8 o M3×10); verifica la profondità del canale della vite sul pezzo renderizzato prima di acquistare. La sede del dado e la tolleranza della vite sono dimensionate per M3 in [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad).
+- **Dadi M3 — 4 per elemento.** Si alloggiano nella tasca esagonale di ogni clamp prima di serrare la vite.
+- **Elastico — 1 per elemento.** Avvolge il blocco `all_in_one` ripiegato per tenere le quattro clamp chiuse contro il collare del boom durante trasporto e stoccaggio.
+
+### 3.5. Allineamento degli elementi
 
 Tutti i loop quadrati devono essere **allineati nella stessa orientazione rotazionale** sul boom. Se un elemento viene ruotato rispetto agli altri, l'accoppiamento tra gli elementi degrada perché i segmenti di corrente cessano di essere paralleli.
 

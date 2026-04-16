@@ -83,13 +83,21 @@ El aluminio es ideal: ligero, rígido y fácil de trabajar. Un tubo cuadrado o c
 
 Un boom de madera funciona igual pero es más pesado y absorbe humedad. Su efecto dieléctrico (εr ≈ 2) podría desplazar la frecuencia ~0.1% — irrelevante en la práctica.
 
-Si el boom es circular en vez de cuadrado, no hay diferencia eléctrica. La única consideración es mecánica: asegurar que los hubs de los spreaders queden fijados en la misma orientación angular (ver sección 3.4).
+Si el boom es circular en vez de cuadrado, no hay diferencia eléctrica. La única consideración es mecánica: asegurar que los hubs de los spreaders queden fijados en la misma orientación angular (ver sección 3.5).
 
 ### 3.3. Spreaders
 
 Varillas de fibra de vidrio, haya, o PVC. Deben ser de material no conductor. El diámetro apropiado depende de la banda: en VHF/UHF, varillas de 4–8 mm son suficientes
 
-### 3.4. Alineación de los elementos
+### 3.4. Tornillería y retención
+
+Cada elemento necesita una pequeña cantidad de tornillería estándar para cerrar las abrazaderas sobre los spreaders y mantener el bloque print-in-place plegado durante el transporte:
+
+- **Tornillos Allen (hex socket cap) M3 × 12 mm — 4 por elemento.** Uno por cada abrazadera de spreader; aprietan las dos mitades de la abrazadera alrededor de la varilla. La longitud de 12 mm está dimensionada para un **spreader de 8 mm** — spreaders más finos (4–6 mm) usan un cuerpo de abrazadera más delgado y pueden necesitar un tornillo más corto (M3×8 o M3×10); comprueba la profundidad del canal del tornillo en la pieza renderizada antes de comprar. El alojamiento de la tuerca y la holgura del tornillo están dimensionados para M3 en [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad).
+- **Tuercas M3 — 4 por elemento.** Se asientan en el hueco hexagonal de cada abrazadera antes de apretar el tornillo.
+- **Goma elástica — 1 por elemento.** Envuelve el bloque `all_in_one` plegado para mantener las cuatro abrazaderas cerradas contra el collar del boom durante transporte y almacenamiento.
+
+### 3.5. Alineación de los elementos
 
 Todos los loops cuadrados deben estar **alineados en la misma orientación rotacional** sobre el boom. Si se rota un elemento respecto a los demás, el acoplamiento entre elementos se degrada porque los segmentos de corriente dejan de ser paralelos.
 

@@ -83,13 +83,21 @@ Aluminum is ideal: light, stiff and easy to work with. A square or circular tube
 
 A wooden boom works the same but is heavier and absorbs moisture. Its dielectric effect (εr ≈ 2) could shift the frequency by ~0.1% — irrelevant in practice.
 
-If the boom is circular instead of square, there is no electrical difference. The only consideration is mechanical: making sure the spreader hubs are fixed in the same angular orientation (see section 3.4).
+If the boom is circular instead of square, there is no electrical difference. The only consideration is mechanical: making sure the spreader hubs are fixed in the same angular orientation (see section 3.5).
 
 ### 3.3. Spreaders
 
 Fiberglass, beech or PVC rods. They must be made of a non-conductive material. The appropriate diameter depends on the band: at VHF/UHF, 4–8 mm rods are sufficient.
 
-### 3.4. Element alignment
+### 3.4. Fasteners and retention
+
+Each element needs a small amount of standard hardware to close the clamps onto the spreaders and keep the print-in-place block folded during transport:
+
+- **M3 × 12 mm hex socket cap screws — 4 per element.** One per spreader clamp; they pull the clamp halves together around the spreader rod. The 12 mm length is sized for an **8 mm spreader** — thinner spreaders (4–6 mm) use a thinner clamp body and may need a shorter screw (M3×8 or M3×10); check the depth of the screw channel on the rendered part before buying. The nut seat and screw clearance are dimensioned for M3 in [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad).
+- **M3 nuts — 4 per element.** Seat into the hex pocket on each clamp before tightening the screw.
+- **Rubber band — 1 per element.** Wraps around the folded `all_in_one` block to keep the four clamps closed against the boom collar during transport and storage.
+
+### 3.5. Element alignment
 
 All the square loops must be **aligned in the same rotational orientation** on the boom. If one element is rotated with respect to the others, the coupling between elements degrades because the current segments are no longer parallel.
 

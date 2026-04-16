@@ -83,13 +83,21 @@ O alumínio é ideal: leve, rígido e fácil de trabalhar. Um tubo quadrado ou c
 
 Um boom de madeira funciona igualmente mas é mais pesado e absorve humidade. O seu efeito dielétrico (εr ≈ 2) poderia deslocar a frequência ~0.1% — irrelevante na prática.
 
-Se o boom for circular em vez de quadrado, não há diferença elétrica. A única consideração é mecânica: garantir que os hubs dos spreaders fiquem fixados na mesma orientação angular (ver secção 3.4).
+Se o boom for circular em vez de quadrado, não há diferença elétrica. A única consideração é mecânica: garantir que os hubs dos spreaders fiquem fixados na mesma orientação angular (ver secção 3.5).
 
 ### 3.3. Spreaders
 
 Varetas de fibra de vidro, faia, ou PVC. Devem ser de material não condutor. O diâmetro apropriado depende da banda: em VHF/UHF, varetas de 4–8 mm são suficientes
 
-### 3.4. Alinhamento dos elementos
+### 3.4. Parafusaria e retenção
+
+Cada elemento necessita de uma pequena quantidade de parafusaria padrão para fechar as abraçadeiras sobre os spreaders e manter o bloco print-in-place dobrado durante o transporte:
+
+- **Parafusos Allen (hex socket cap) M3 × 12 mm — 4 por elemento.** Um por cada abraçadeira de spreader; apertam as duas metades da abraçadeira em torno da vareta. O comprimento de 12 mm está dimensionado para um **spreader de 8 mm** — spreaders mais finos (4–6 mm) usam um corpo de abraçadeira mais fino e podem precisar de um parafuso mais curto (M3×8 ou M3×10); verifica a profundidade do canal do parafuso na peça renderizada antes de comprar. O alojamento da porca e a folga do parafuso estão dimensionados para M3 em [src/antenna_spreader_clamp.scad](../src/antenna_spreader_clamp.scad).
+- **Porcas M3 — 4 por elemento.** Assentam no bolso hexagonal de cada abraçadeira antes de apertar o parafuso.
+- **Elástico de borracha — 1 por elemento.** Envolve o bloco `all_in_one` dobrado para manter as quatro abraçadeiras fechadas contra o colar do boom durante transporte e armazenamento.
+
+### 3.5. Alinhamento dos elementos
 
 Todos os loops quadrados devem estar **alinhados na mesma orientação rotacional** sobre o boom. Se um elemento for rodado em relação aos demais, o acoplamento entre elementos degrada-se porque os segmentos de corrente deixam de ser paralelos.
 
