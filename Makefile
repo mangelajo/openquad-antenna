@@ -9,10 +9,11 @@ RENDER_COLORSCHEME ?= ClearSky
 RENDER_FLAGS   ?= --imgsize=800,800 --camera=0,0,0,45,0,135,0 --viewall --autocenter --render --backend=manifold $(if $(RENDER_COLORSCHEME),--colorscheme="$(RENDER_COLORSCHEME)")
 
 BUILD := build
+DOCS_IMG_DIR := docs/images/generated
 STLS := $(BUILD)/all_in_one.stl $(BUILD)/driven_element.stl $(BUILD)/regular_wire_clamp.stl
 PNGS := $(STLS:.stl=.png)
 
-.PHONY: help all matrix zip renders clean
+.PHONY: help all matrix zip renders docs-images clean
 
 help: ## Show this help
 	@awk 'BEGIN{FS=":.*## "; printf "Targets:\n"} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -117,6 +118,10 @@ matrix: $(MATRIX_STLS) ## Build all 54 matrix STLs (round/square × 3 boom × 3 
 zip: $(MATRIX_ZIPS) ## Build all 18 per-combination zip files
 
 renders: $(PNGS) $(MATRIX_PNGS) ## Render PNG previews of every STL
+
+docs-images: $(MATRIX_PNGS) ## Render matrix PNGs and copy them to docs/images/generated/
+	mkdir -p $(DOCS_IMG_DIR)
+	cp $(MATRIX_PNGS) $(DOCS_IMG_DIR)/
 
 clean: ## Remove the build/ directory
 	rm -rf $(BUILD)
