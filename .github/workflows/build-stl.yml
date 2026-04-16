@@ -10,6 +10,8 @@ on:
     paths:
       - 'src/**'
       - '.github/workflows/build-stl.yml'
+  release:
+    types: [published]
   workflow_dispatch:
 
 jobs:
@@ -57,3 +59,12 @@ jobs:
         with:
           name: stls
           path: build/*.stl
+
+      - name: Upload STLs to release
+        if: github.event_name == 'release'
+        run: |
+          for stl in build/*.stl; do
+            gh release upload "${{ github.event.release.tag_name }}" "$stl" --clobber
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
