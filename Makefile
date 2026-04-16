@@ -1,12 +1,29 @@
 MAC_OPENSCAD := /Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD
 OPENSCAD ?= $(shell if [ "$$(uname)" = "Darwin" ] && [ -x "$(MAC_OPENSCAD)" ]; then echo "$(MAC_OPENSCAD)"; else echo openscad; fi)
 OPENSCAD_FLAGS ?= --backend=manifold
+# Override e.g.: make renders RENDER_COLORSCHEME=Metallic
+# Schemes: Cornfield Metallic Sunset Starnight BeforeDawn Nature
+#          "Daylight Gem" "Nocturnal Gem" DeepOcean Solarized
+#          Tomorrow "Tomorrow Night" ClearSky Monotone
+RENDER_COLORSCHEME ?= ClearSky
+RENDER_FLAGS   ?= --imgsize=800,800 --camera=0,0,0,45,0,135,0 --viewall --autocenter --render --backend=manifold $(if $(RENDER_COLORSCHEME),--colorscheme="$(RENDER_COLORSCHEME)")
 
 BUILD := build
 STLS := $(BUILD)/all_in_one.stl $(BUILD)/driven_element.stl $(BUILD)/regular_wire_clamp.stl
+PNGS := $(STLS:.stl=.png)
 
-.PHONY: all matrix zip clean
-all: $(STLS)
+.PHONY: help all matrix zip renders clean
+
+help: ## Show this help
+	@awk 'BEGIN{FS=":.*## "; printf "Targets:\n"} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@printf "\nOverridable variables (e.g. make renders RENDER_COLORSCHEME=Metallic):\n"
+	@printf "  \033[36m%-22s\033[0m %s\n" "OPENSCAD" "openscad binary (auto-detected on macOS)"
+	@printf "  \033[36m%-22s\033[0m %s\n" "OPENSCAD_FLAGS" "flags for STL generation [$(OPENSCAD_FLAGS)]"
+	@printf "  \033[36m%-22s\033[0m %s\n" "RENDER_FLAGS" "flags for PNG renders"
+	@printf "  \033[36m%-22s\033[0m %s\n" "RENDER_COLORSCHEME" "OpenSCAD color scheme name (see top of Makefile)"
+	@printf "\nTip: use 'make -j4 ...' for parallel builds.\n"
+
+all: $(STLS) ## Build the 3 default STLs into build/
 
 $(BUILD):
 	mkdir -p $@
@@ -20,6 +37,15 @@ $(BUILD)/driven_element.stl: src/antenna_spreader_clamp.scad | $(BUILD)
 $(BUILD)/regular_wire_clamp.stl: src/antenna_spreader_clamp.scad | $(BUILD)
 	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ -D 'driven_element=false' $<
 
+$(BUILD)/all_in_one.png: src/all_in_one.scad | $(BUILD)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $@ $<
+
+$(BUILD)/driven_element.png: src/antenna_spreader_clamp.scad | $(BUILD)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $@ -D 'driven_element=true' $<
+
+$(BUILD)/regular_wire_clamp.png: src/antenna_spreader_clamp.scad | $(BUILD)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $@ -D 'driven_element=false' $<
+
 # ============================================================
 # Matrix builds: round/square × boom dim × spreader dim
 # Layout: build/{shape}_boom_{dim}mm/spreaders_{sd}mm/*.stl
@@ -31,16 +57,18 @@ BOOM_DIMS      := 14.9 15.9 19.9
 SPREADERS_DIMS := 8.10 4.05 6.07
 
 MATRIX_STLS :=
+MATRIX_PNGS :=
 MATRIX_ZIPS :=
 
 # $(1) shape  $(2) is_round (true|false)  $(3) boom_var (boom_dia|boom_side)
 # $(4) boom dim  $(5) spreaders dim
-# Inner STL filenames are prefixed {r|s}_b{bd}_s{sd}_ for traceability.
+# Inner STL/PNG filenames are prefixed {r|s}_b{bd}_s{sd}_ for traceability.
 define gen_combo
 $(eval _dir := $(BUILD)/$(1)_boom_$(4)mm/spreaders_$(5)mm)
 $(eval _pfx := $(if $(filter round,$(1)),r,s)_b$(4)_s$(5))
 
 MATRIX_STLS += $(_dir)/$(_pfx)_all_in_one.stl $(_dir)/$(_pfx)_driven_element.stl $(_dir)/$(_pfx)_regular_wire_clamp.stl
+MATRIX_PNGS += $(_dir)/$(_pfx)_all_in_one.png $(_dir)/$(_pfx)_driven_element.png $(_dir)/$(_pfx)_regular_wire_clamp.png
 MATRIX_ZIPS += $(BUILD)/$(1)_boom_$(4)mm_spreaders_$(5)mm.zip
 
 $(_dir):
@@ -62,15 +90,33 @@ $(_dir)/$(_pfx)_regular_wire_clamp.stl: src/antenna_spreader_clamp.scad | $(_dir
 	  -D 'driven_element=false' \
 	  -D 'spreaders_dia=$(5)' $$<
 
-$(BUILD)/$(1)_boom_$(4)mm_spreaders_$(5)mm.zip: $(_dir)/$(_pfx)_all_in_one.stl $(_dir)/$(_pfx)_driven_element.stl $(_dir)/$(_pfx)_regular_wire_clamp.stl
-	cd $(BUILD) && zip -j $$(notdir $$@) $(1)_boom_$(4)mm/spreaders_$(5)mm/*.stl
+$(_dir)/$(_pfx)_all_in_one.png: src/all_in_one.scad | $(_dir)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $$@ \
+	  -D 'boom_is_round=$(2)' \
+	  -D '$(3)=$(4)' \
+	  -D 'spreaders_dia=$(5)' $$<
+
+$(_dir)/$(_pfx)_driven_element.png: src/antenna_spreader_clamp.scad | $(_dir)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $$@ \
+	  -D 'driven_element=true' \
+	  -D 'spreaders_dia=$(5)' $$<
+
+$(_dir)/$(_pfx)_regular_wire_clamp.png: src/antenna_spreader_clamp.scad | $(_dir)
+	$(OPENSCAD) $(RENDER_FLAGS) -o $$@ \
+	  -D 'driven_element=false' \
+	  -D 'spreaders_dia=$(5)' $$<
+
+$(BUILD)/$(1)_boom_$(4)mm_spreaders_$(5)mm.zip: $(_dir)/$(_pfx)_all_in_one.stl $(_dir)/$(_pfx)_driven_element.stl $(_dir)/$(_pfx)_regular_wire_clamp.stl $(_dir)/$(_pfx)_all_in_one.png $(_dir)/$(_pfx)_driven_element.png $(_dir)/$(_pfx)_regular_wire_clamp.png
+	cd $(BUILD) && zip -j $$(notdir $$@) $(1)_boom_$(4)mm/spreaders_$(5)mm/*.stl $(1)_boom_$(4)mm/spreaders_$(5)mm/*.png
 endef
 
 $(foreach s,$(SHAPES),$(foreach b,$(BOOM_DIMS),$(foreach d,$(SPREADERS_DIMS),$(eval $(call gen_combo,$(s),$(if $(filter round,$(s)),true,false),$(if $(filter round,$(s)),boom_dia,boom_side),$(b),$(d))))))
 
-matrix: $(MATRIX_STLS)
+matrix: $(MATRIX_STLS) ## Build all 54 matrix STLs (round/square × 3 boom × 3 spreader)
 
-zip: $(MATRIX_ZIPS)
+zip: $(MATRIX_ZIPS) ## Build all 18 per-combination zip files
 
-clean:
+renders: $(PNGS) $(MATRIX_PNGS) ## Render PNG previews of every STL
+
+clean: ## Remove the build/ directory
 	rm -rf $(BUILD)
