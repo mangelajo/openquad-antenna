@@ -49,14 +49,7 @@ jobs:
         run: sudo chmod +x /usr/local/bin/openscad
 
       - name: Build STLs
-        run: |
-          mkdir -p build
-          OSCAD="xvfb-run -a openscad --backend=manifold"
-          $OSCAD -o build/all_in_one.stl src/all_in_one.scad
-          $OSCAD -o build/driven_element.stl \
-            -D 'driven_element=true' src/antenna_spreader_clamp.scad
-          $OSCAD -o build/regular_wire_clamp.stl \
-            -D 'driven_element=false' src/antenna_spreader_clamp.scad
+        run: make OPENSCAD="xvfb-run -a openscad"
 
       - uses: actions/upload-artifact@v4
         with:
