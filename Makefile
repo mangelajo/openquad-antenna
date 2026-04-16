@@ -6,7 +6,7 @@ OPENSCAD_FLAGS ?= --backend=manifold
 #          "Daylight Gem" "Nocturnal Gem" DeepOcean Solarized
 #          Tomorrow "Tomorrow Night" ClearSky Monotone
 RENDER_COLORSCHEME ?= ClearSky
-RENDER_FLAGS   ?= --imgsize=800,800 --camera=0,0,0,45,0,135,0 --viewall --autocenter --render --backend=manifold $(if $(RENDER_COLORSCHEME),--colorscheme="$(RENDER_COLORSCHEME)")
+RENDER_FLAGS   ?= --imgsize=800,800 --camera=0,0,0,65,0,-135,0 --viewall --autocenter --render --backend=manifold $(if $(RENDER_COLORSCHEME),--colorscheme="$(RENDER_COLORSCHEME)")
 
 BUILD := build
 DOCS_IMG_DIR := docs/images/generated
