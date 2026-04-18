@@ -6,7 +6,7 @@
 
 ## 1. Qué es este diseño
 
-Este proyecto documenta un **diseño de antena Cubical Quad modular y plegable** pensado para fabricarse con piezas impresas en 3D, varillas de fibra de vidrio como spreaders y un boom de aluminio.
+Este proyecto documenta un **diseño de antena Cubical Quad modular y plegable** pensado para fabricarse con piezas impresas en 3D, varillas de fibra de vidrio o madera como spreaders y un boom de PVC, madera o aluminio.
 
 Las características principales del diseño son:
 
@@ -28,7 +28,7 @@ Las fórmulas son válidas para cualquier frecuencia; como ejemplo práctico det
 
 Las siguientes dimensiones corresponden a la construcción real documentada en esta guía, usando cable PVC de 0.5 mm² con velocity factor medido de 0.91.
 
-> Si construyes para otra frecuencia o con otro tipo de cable, consulta las fórmulas generales y el procedimiento para medir el Vf en [TEORIA.es.md § 2–3](TEORIA.es.md).
+> Si construyes para otra frecuencia o con otro tipo de cable, consulta las fórmulas generales y el procedimiento para medir el Vf en [TEORIA.es.md § 2–3](TEORIA.es.md), o usa la [🧮 calculadora online](https://openquad-calc.ea4ipw.es) para obtener las dimensiones directamente.
 
 **Elementos:**
 
@@ -64,6 +64,20 @@ Las siguientes dimensiones corresponden a la construcción real documentada en e
 ---
 
 ## 3. Materiales
+
+Resumen de lo que necesitas para construir la antena. Las secciones siguientes detallan alternativas, dimensionado y justificaciones.
+
+| Material | Especificación recomendada | Cantidad | Subsección |
+|---|---|---|---|
+| Cable de cobre (elementos) | PVC 0.5 mm² (VHF/UHF); 1–2 mm Ø desnudo o aislado (HF) | Según perímetros (§2) | [3.1](#31-cable-para-los-elementos) |
+| Boom | Tubo de aluminio, PVC o madera (cuadrado o circular) | 1, longitud según configuración (§2) | [3.2](#32-boom) |
+| Spreaders | Varilla no conductora (fibra de vidrio, haya o PVC), 4–8 mm Ø en VHF/UHF | 4 por elemento | [3.3](#33-spreaders) |
+| Tornillos Allen M3 × 12 mm | Hex socket cap (M3×8/M3×10 para spreaders más finos) | 4 por elemento | [3.4](#34-tornillería-y-retención) |
+| Tuercas M3 | Hexagonales estándar | 4 por elemento | [3.4](#34-tornillería-y-retención) |
+| Goma elástica | Cualquiera que abrace el bloque plegado | 1 por elemento | [3.4](#34-tornillería-y-retención) |
+| Coaxial + conector | Según tu equipo (típicamente RG-58/RG-316 en UHF) | 1 | — |
+| Termorretráctil | Varios diámetros para aislar soldaduras del feedpoint y empalmes | Unos cm | — |
+| Ferritas snap-on mix 43 (opcional, ajuste) | Fair-Rite 0443164251/0443167251 según Ø del coaxial | 5–6 | [4.2](#42-choke-balun-opcional-pero-recomendado-para-la-medida) |
 
 ### 3.1. Cable para los elementos
 
@@ -140,14 +154,15 @@ Si usas cobre desnudo, salta al paso 2 (Vf = 1.0).
 
 Si usas cable con aislamiento:
 
-1. Calcula el perímetro del driven element con Vf = 1.0: `perímetro = 1005 / f(MHz) × 304.8 mm`.
-2. Construye el loop y el reflector y el mide su resonancia con el VNA.
-3. Calcula tu Vf real: `Vf = f_medida / f_objetivo`.
-4. Recalcula todas las dimensiones con este Vf.
+1. Calcula las dimensiones de todos los elementos con Vf = 1.0 usando la [🧮 calculadora online](https://openquad-calc.ea4ipw.es) o las fórmulas (`perímetro driven = 1005 / f(MHz) × 304.8 mm`).
+2. Monta la antena completa con esas dimensiones.
+3. Mide la frecuencia resonante del conjunto con el VNA.
+4. Introduce la frecuencia medida (y la objetivo) en la [🧮 calculadora](https://openquad-calc.ea4ipw.es) para obtener el Vf real y las dimensiones corregidas.
+5. Acorta cada loop a la nueva medida — las abrazaderas de hilo ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) permiten este ajuste sin rehacer la soldadura.
 
 > Ver [TEORIA.es.md § 2.4](TEORIA.es.md) para más detalles.
 
-**No intentes ajustar el driven aislado a la frecuencia objetivo y luego añadir el reflector esperando que se mantenga.** El acoplamiento siempre desplaza la frecuencia. Hay dos enfoques válidos:
+**No intentes ajustar el driven aislado a la frecuencia objetivo y luego añadir el reflector esperando que se mantenga.** El acoplamiento siempre desplaza la frecuencia; por eso medimos con la antena completa ya montada.
 
 #### Paso 2 — Añadir los directores, uno a uno
 
