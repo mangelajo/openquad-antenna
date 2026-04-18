@@ -6,7 +6,7 @@
 
 ## 1. Cos'è questo progetto
 
-Questo progetto documenta un **design di antenna Cubical Quad modulare e pieghevole** pensato per essere realizzato con parti stampate in 3D, aste di fibra di vetro come spreader e un boom di alluminio.
+Questo progetto documenta un **design di antenna Cubical Quad modulare e pieghevole** pensato per essere realizzato con parti stampate in 3D, aste di fibra di vetro o legno come spreader e un boom in PVC, legno o alluminio.
 
 Le caratteristiche principali del progetto sono:
 
@@ -28,7 +28,7 @@ Le formule sono valide per qualsiasi frequenza; come esempio pratico dettagliato
 
 Le seguenti dimensioni corrispondono alla costruzione reale documentata in questa guida, utilizzando cavo PVC da 0.5 mm² con velocity factor misurato di 0.91.
 
-> Se costruisci per un'altra frequenza o con un altro tipo di cavo, consulta le formule generali e la procedura per misurare il Vf in [TEORIA.it.md § 2–3](TEORIA.it.md).
+> Se costruisci per un'altra frequenza o con un altro tipo di cavo, consulta le formule generali e la procedura per misurare il Vf in [TEORIA.it.md § 2–3](TEORIA.it.md), oppure usa il [🧮 calcolatore online](https://openquad-calc.ea4ipw.es) per ottenere direttamente le dimensioni.
 
 **Elementi:**
 
@@ -64,6 +64,20 @@ Le seguenti dimensioni corrispondono alla costruzione reale documentata in quest
 ---
 
 ## 3. Materiali
+
+Riepilogo di ciò che serve per costruire l'antenna. Le sezioni seguenti dettagliano alternative, dimensionamento e motivazioni.
+
+| Materiale | Specifica consigliata | Quantità | Sottosezione |
+|---|---|---|---|
+| Cavo di rame (elementi) | PVC 0.5 mm² (VHF/UHF); 1–2 mm Ø nudo o isolato (HF) | Secondo i perimetri (§2) | [3.1](#31-cavo-per-gli-elementi) |
+| Boom | Tubo di alluminio, PVC o legno (quadrato o circolare) | 1, lunghezza a seconda della configurazione (§2) | [3.2](#32-boom) |
+| Spreader | Asta non conduttrice (fibra di vetro, faggio o PVC), 4–8 mm Ø in VHF/UHF | 4 per elemento | [3.3](#33-spreader) |
+| Viti a brugola M3 × 12 mm | Hex socket cap (M3×8/M3×10 per spreader più sottili) | 4 per elemento | [3.4](#34-viteria-e-ritenzione) |
+| Dadi M3 | Esagonali standard | 4 per elemento | [3.4](#34-viteria-e-ritenzione) |
+| Elastico | Uno qualsiasi che abbracci il blocco ripiegato | 1 per elemento | [3.4](#34-viteria-e-ritenzione) |
+| Coassiale + connettore | Secondo il tuo apparato (tipicamente RG-58/RG-316 in UHF) | 1 | — |
+| Termorestringente | Vari diametri per isolare saldature del feedpoint e giunzioni | Pochi cm | — |
+| Ferriti snap-on mix 43 (opzionale, regolazione) | Fair-Rite 0443164251/0443167251 a seconda del Ø del coassiale | 5–6 | [4.2](#42-choke-balun-opzionale-ma-raccomandato-per-la-misura) |
 
 ### 3.1. Cavo per gli elementi
 
@@ -140,14 +154,15 @@ Se usi rame nudo, salta al passo 2 (Vf = 1.0).
 
 Se usi cavo con isolamento:
 
-1. Calcola il perimetro del driven element con Vf = 1.0: `perimetro = 1005 / f(MHz) × 304.8 mm`.
-2. Costruisci il loop e il riflettore e misura la sua risonanza con il VNA.
-3. Calcola il tuo Vf reale: `Vf = f_misurata / f_obiettivo`.
-4. Ricalcola tutte le dimensioni con questo Vf.
+1. Calcola le dimensioni di tutti gli elementi con Vf = 1.0 usando il [🧮 calcolatore online](https://openquad-calc.ea4ipw.es) o le formule (`perimetro driven = 1005 / f(MHz) × 304.8 mm`).
+2. Monta l'antenna completa con quelle dimensioni.
+3. Misura la frequenza di risonanza dell'insieme con il VNA.
+4. Inserisci la frequenza misurata (e quella obiettivo) nel [🧮 calcolatore](https://openquad-calc.ea4ipw.es) per ottenere il Vf reale e le dimensioni corrette.
+5. Accorcia ogni loop alla nuova misura — i morsetti per il filo ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) permettono questa regolazione senza rifare la saldatura.
 
 > Vedi [TEORIA.it.md § 2.4](TEORIA.it.md) per maggiori dettagli.
 
-**Non tentare di regolare il driven isolato alla frequenza obiettivo e poi aggiungere il riflettore sperando che si mantenga.** L'accoppiamento sposta sempre la frequenza. Ci sono due approcci validi:
+**Non tentare di regolare il driven isolato alla frequenza obiettivo e poi aggiungere il riflettore sperando che si mantenga.** L'accoppiamento sposta sempre la frequenza; per questo misuriamo con l'antenna completa già montata.
 
 #### Passo 2 — Aggiungere i direttori, uno a uno
 

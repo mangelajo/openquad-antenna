@@ -6,7 +6,7 @@
 
 ## 1. O que é este design
 
-Este projeto documenta um **design de antena Cubical Quad modular e dobrável** pensado para ser fabricado com peças impressas em 3D, varetas de fibra de vidro como spreaders e um boom de alumínio.
+Este projeto documenta um **design de antena Cubical Quad modular e dobrável** pensado para ser fabricado com peças impressas em 3D, varetas de fibra de vidro ou madeira como spreaders e um boom de PVC, madeira ou alumínio.
 
 As características principais do design são:
 
@@ -28,7 +28,7 @@ As fórmulas são válidas para qualquer frequência; como exemplo prático deta
 
 As seguintes dimensões correspondem à construção real documentada neste guia, usando cabo PVC de 0.5 mm² com velocity factor medido de 0.91.
 
-> Se construíres para outra frequência ou com outro tipo de cabo, consulta as fórmulas gerais e o procedimento para medir o Vf em [TEORIA.pt.md § 2–3](TEORIA.pt.md).
+> Se construíres para outra frequência ou com outro tipo de cabo, consulta as fórmulas gerais e o procedimento para medir o Vf em [TEORIA.pt.md § 2–3](TEORIA.pt.md), ou usa a [🧮 calculadora online](https://openquad-calc.ea4ipw.es) para obter as dimensões diretamente.
 
 **Elementos:**
 
@@ -64,6 +64,20 @@ As seguintes dimensões correspondem à construção real documentada neste guia
 ---
 
 ## 3. Materiais
+
+Resumo do que precisas para construir a antena. As secções seguintes detalham alternativas, dimensionamento e justificações.
+
+| Material | Especificação recomendada | Quantidade | Subsecção |
+|---|---|---|---|
+| Cabo de cobre (elementos) | PVC 0.5 mm² (VHF/UHF); 1–2 mm Ø nu ou isolado (HF) | Segundo perímetros (§2) | [3.1](#31-cabo-para-os-elementos) |
+| Boom | Tubo de alumínio, PVC ou madeira (quadrado ou circular) | 1, comprimento conforme configuração (§2) | [3.2](#32-boom) |
+| Spreaders | Vareta não condutora (fibra de vidro, faia ou PVC), 4–8 mm Ø em VHF/UHF | 4 por elemento | [3.3](#33-spreaders) |
+| Parafusos Allen M3 × 12 mm | Hex socket cap (M3×8/M3×10 para spreaders mais finos) | 4 por elemento | [3.4](#34-parafusaria-e-retenção) |
+| Porcas M3 | Hexagonais padrão | 4 por elemento | [3.4](#34-parafusaria-e-retenção) |
+| Elástico de borracha | Qualquer um que envolva o bloco dobrado | 1 por elemento | [3.4](#34-parafusaria-e-retenção) |
+| Coaxial + conector | Conforme o teu equipamento (tipicamente RG-58/RG-316 em UHF) | 1 | — |
+| Termorretrátil | Vários diâmetros para isolar soldaduras do feedpoint e emendas | Alguns cm | — |
+| Ferrites snap-on mix 43 (opcional, ajuste) | Fair-Rite 0443164251/0443167251 conforme Ø do coaxial | 5–6 | [4.2](#42-choke-balun-opcional-mas-recomendado-para-a-medição) |
 
 ### 3.1. Cabo para os elementos
 
@@ -140,14 +154,15 @@ Se usares cobre nu, salta para o passo 2 (Vf = 1.0).
 
 Se usares cabo com isolamento:
 
-1. Calcula o perímetro do driven element com Vf = 1.0: `perímetro = 1005 / f(MHz) × 304.8 mm`.
-2. Constrói o loop e o refletor e mede a sua ressonância com o VNA.
-3. Calcula o teu Vf real: `Vf = f_medida / f_objetivo`.
-4. Recalcula todas as dimensões com este Vf.
+1. Calcula as dimensões de todos os elementos com Vf = 1.0 usando a [🧮 calculadora online](https://openquad-calc.ea4ipw.es) ou as fórmulas (`perímetro driven = 1005 / f(MHz) × 304.8 mm`).
+2. Monta a antena completa com essas dimensões.
+3. Mede a frequência de ressonância do conjunto com o VNA.
+4. Introduz a frequência medida (e a objetivo) na [🧮 calculadora](https://openquad-calc.ea4ipw.es) para obter o Vf real e as dimensões corrigidas.
+5. Corta cada loop à nova medida — as abraçadeiras de fio ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) permitem este ajuste sem refazer a soldadura.
 
 > Ver [TEORIA.pt.md § 2.4](TEORIA.pt.md) para mais detalhes.
 
-**Não tentes ajustar o driven isolado à frequência objetivo e depois acrescentar o refletor esperando que se mantenha.** O acoplamento desloca sempre a frequência. Há duas abordagens válidas:
+**Não tentes ajustar o driven isolado à frequência objetivo e depois acrescentar o refletor esperando que se mantenha.** O acoplamento desloca sempre a frequência; por isso medimos com a antena completa já montada.
 
 #### Passo 2 — Acrescentar os diretores, um a um
 

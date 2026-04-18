@@ -6,7 +6,7 @@
 
 ## 1. What this design is
 
-This project documents a **modular and foldable Cubical Quad antenna design** intended to be built with 3D-printed parts, fiberglass rods as spreaders, and an aluminum boom.
+This project documents a **modular and foldable Cubical Quad antenna design** intended to be built with 3D-printed parts, fiberglass or wooden rods as spreaders, and a PVC, wooden or aluminum boom.
 
 The main features of the design are:
 
@@ -28,7 +28,7 @@ The formulas are valid for any frequency; as a detailed practical example, a rea
 
 The following dimensions correspond to the real build documented in this guide, using 0.5 mm² PVC wire with a measured velocity factor of 0.91.
 
-> If you build for another frequency or with a different type of wire, see the general formulas and the procedure for measuring Vf in [TEORIA.en.md § 2–3](TEORIA.en.md).
+> If you build for another frequency or with a different type of wire, see the general formulas and the procedure for measuring Vf in [TEORIA.en.md § 2–3](TEORIA.en.md), or use the [🧮 online calculator](https://openquad-calc.ea4ipw.es) to get the dimensions directly.
 
 **Elements:**
 
@@ -64,6 +64,20 @@ The following dimensions correspond to the real build documented in this guide, 
 ---
 
 ## 3. Materials
+
+A summary of what you need to build the antenna. The sections below detail alternatives, sizing and rationale.
+
+| Material | Recommended specification | Quantity | Subsection |
+|---|---|---|---|
+| Copper wire (elements) | PVC 0.5 mm² (VHF/UHF); 1–2 mm Ø bare or insulated (HF) | According to perimeters (§2) | [3.1](#31-wire-for-the-elements) |
+| Boom | Aluminum, PVC or wooden tube (square or circular) | 1, length per configuration (§2) | [3.2](#32-boom) |
+| Spreaders | Non-conductive rod (fiberglass, beech or PVC), 4–8 mm Ø at VHF/UHF | 4 per element | [3.3](#33-spreaders) |
+| M3 × 12 mm hex socket cap screws | Hex socket cap (M3×8/M3×10 for thinner spreaders) | 4 per element | [3.4](#34-fasteners-and-retention) |
+| M3 nuts | Standard hex | 4 per element | [3.4](#34-fasteners-and-retention) |
+| Rubber band | Any that fits around the folded block | 1 per element | [3.4](#34-fasteners-and-retention) |
+| Coax + connector | According to your rig (typically RG-58/RG-316 at UHF) | 1 | — |
+| Heat-shrink tubing | Various diameters to insulate feedpoint solder joints and splices | A few cm | — |
+| Snap-on ferrites mix 43 (optional, tuning) | Fair-Rite 0443164251/0443167251 by coax Ø | 5–6 | [4.2](#42-choke-balun-optional-but-recommended-for-measurement) |
 
 ### 3.1. Wire for the elements
 
@@ -140,14 +154,15 @@ If you use bare copper, skip to step 2 (Vf = 1.0).
 
 If you use insulated wire:
 
-1. Calculate the perimeter of the driven element with Vf = 1.0: `perimeter = 1005 / f(MHz) × 304.8 mm`.
-2. Build the loop and the reflector and measure its resonance with the VNA.
-3. Calculate your real Vf: `Vf = f_measured / f_target`.
-4. Recalculate all dimensions with this Vf.
+1. Calculate the dimensions of all elements with Vf = 1.0 using the [🧮 online calculator](https://openquad-calc.ea4ipw.es) or the formulas (`driven perimeter = 1005 / f(MHz) × 304.8 mm`).
+2. Build the full antenna with those dimensions.
+3. Measure the resonance frequency of the assembled antenna with the VNA.
+4. Enter the measured frequency (and the target) into the [🧮 calculator](https://openquad-calc.ea4ipw.es) to obtain the real Vf and the corrected dimensions.
+5. Shorten each loop to the new measurement — the wire clamps ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) allow this adjustment without redoing the solder joint.
 
 > See [TEORIA.en.md § 2.4](TEORIA.en.md) for more details.
 
-**Do not try to tune the driven in isolation to the target frequency and then add the reflector expecting it to stay put.** Coupling always shifts the frequency. There are two valid approaches:
+**Do not try to tune the driven in isolation to the target frequency and then add the reflector expecting it to stay put.** Coupling always shifts the frequency; that's why we measure with the full antenna already assembled.
 
 #### Step 2 — Add the directors, one by one
 
