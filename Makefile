@@ -13,7 +13,7 @@ DOCS_IMG_DIR := docs/images/generated
 STLS := $(BUILD)/all_in_one.stl $(BUILD)/driven_element.stl $(BUILD)/regular_wire_clamp.stl
 PNGS := $(STLS:.stl=.png)
 
-.PHONY: help all matrix zip renders docs-images test serve clean
+.PHONY: help all matrix zip renders docs-images test serve clean nfq
 
 # Calculator / web app
 NODE    ?= node
@@ -53,6 +53,55 @@ $(BUILD)/driven_element.png: src/antenna_spreader_clamp.scad | $(BUILD)
 
 $(BUILD)/regular_wire_clamp.png: src/antenna_spreader_clamp.scad | $(BUILD)
 	$(OPENSCAD) $(RENDER_FLAGS) -o $@ -D 'driven_element=false' $<
+
+# ============================================================
+# Non-foldable quad (src/non_foldable_quad.scad)
+# Integrated-rod X element + boom segment couplers.
+# Override on the command line, e.g.:
+#   make nfq NFQ_FREQ=432.0 NFQ_VF=0.95 NFQ_DIRS=2
+# ============================================================
+
+NFQ_FREQ ?= 432.0
+NFQ_VF   ?= 0.95
+NFQ_DIRS ?= 2
+
+NFQ_COMMON = -D 'freq=$(NFQ_FREQ)' -D 'vf=$(NFQ_VF)' -D 'num_directors=$(NFQ_DIRS)'
+
+NFQ_STLS := $(BUILD)/nfq_x_reflector.stl $(BUILD)/nfq_x_driven.stl \
+            $(BUILD)/nfq_x_dir1.stl $(BUILD)/nfq_x_dir2.stl \
+            $(BUILD)/nfq_boom_seg0.stl $(BUILD)/nfq_boom_seg1.stl
+
+$(BUILD)/nfq_x_reflector.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="x"' -D 'element_index=0' -D 'driven_element=false' \
+	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_x_driven.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="x"' -D 'element_index=1' -D 'driven_element=true' \
+	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_x_dir1.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="x"' -D 'element_index=2' -D 'driven_element=false' \
+	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_x_dir2.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="x"' -D 'element_index=3' -D 'driven_element=false' \
+	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_boom_seg0.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="boom"' -D 'segment_index=0' \
+	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_boom_seg1.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="boom"' -D 'segment_index=1' \
+	  $(NFQ_COMMON) $<
+
+nfq: $(NFQ_STLS) ## Build the non-foldable quad STLs (override NFQ_FREQ/NFQ_VF/NFQ_DIRS)
 
 # ============================================================
 # Matrix builds: round/square × boom dim × spreader dim
