@@ -148,16 +148,14 @@ The snap-ons open and close with your fingers, require no tools, and are complet
 
 ### 4.3. Tuning procedure
 
-#### Step 1 — Determine the Vf of your wire
+#### Step 1 — Build and calibrate the Vf
 
-If you use bare copper, skip to step 2 (Vf = 1.0).
+Every real wire has Vf < 1. Bare copper in air sits around 0.97–0.99; insulated wires drop to 0.90–0.97 depending on the dielectric. The recommended procedure is to start from an approximate value and calibrate by measurement:
 
-If you use insulated wire:
-
-1. Calculate the dimensions of all elements with Vf = 1.0 using the [🧮 online calculator](https://openquad-calc.ea4ipw.es) or the formulas (`driven perimeter = 1005 / f(MHz) × 304.8 mm`).
+1. Calculate the dimensions of all elements with the [🧮 online calculator](https://openquad-calc.ea4ipw.es), using the typical starting Vf for your wire (0.99 bare copper, ≈0.91 thin PVC, ≈0.95 polyethylene, ≈0.97 Teflon; full table in [TEORIA.en.md § 2.2](TEORIA.en.md)). The underlying formula is `perimeter = k × λ × Vf`, with `λ = 299,792.458 / f(MHz)` mm and `k_driven ≈ 1.022` (see [TEORIA.en.md § 1](TEORIA.en.md)).
 2. Build the full antenna with those dimensions.
 3. Measure the resonance frequency of the assembled antenna with the VNA.
-4. Enter the measured frequency (and the target) into the [🧮 calculator](https://openquad-calc.ea4ipw.es) to obtain the real Vf and the corrected dimensions.
+4. Enter the measured frequency into the [🧮 calculator](https://openquad-calc.ea4ipw.es) to obtain the real Vf and the corrected dimensions.
 5. Shorten each loop to the new measurement — the wire clamps ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) allow this adjustment without redoing the solder joint.
 
 > See [TEORIA.en.md § 2.4](TEORIA.en.md) for more details.

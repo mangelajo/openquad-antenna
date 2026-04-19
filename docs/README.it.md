@@ -148,16 +148,14 @@ Le snap-on si aprono e chiudono con le dita, non richiedono attrezzi, e sono com
 
 ### 4.3. Procedura di regolazione
 
-#### Passo 1 — Determinare il Vf del tuo cavo
+#### Passo 1 — Costruire e calibrare il Vf
 
-Se usi rame nudo, salta al passo 2 (Vf = 1.0).
+Ogni cavo reale ha Vf < 1. Il rame nudo in aria si aggira tra 0.97 e 0.99; i cavi con isolamento scendono a 0.90–0.97 a seconda del dielettrico. La procedura consigliata è partire da un valore approssimato e calibrare misurando:
 
-Se usi cavo con isolamento:
-
-1. Calcola le dimensioni di tutti gli elementi con Vf = 1.0 usando il [🧮 calcolatore online](https://openquad-calc.ea4ipw.es) o le formule (`perimetro driven = 1005 / f(MHz) × 304.8 mm`).
+1. Calcola le dimensioni di tutti gli elementi con il [🧮 calcolatore online](https://openquad-calc.ea4ipw.es), usando come Vf di partenza il valore tipico del tuo cavo (0.99 rame nudo, ≈0.91 PVC sottile, ≈0.95 polietilene, ≈0.97 teflon; tabella completa in [TEORIA.it.md § 2.2](TEORIA.it.md)). La formula sottostante è `perimetro = k × λ × Vf`, con `λ = 299,792.458 / f(MHz)` mm e `k_driven ≈ 1.022` (vedi [TEORIA.it.md § 1](TEORIA.it.md)).
 2. Monta l'antenna completa con quelle dimensioni.
 3. Misura la frequenza di risonanza dell'insieme con il VNA.
-4. Inserisci la frequenza misurata (e quella obiettivo) nel [🧮 calcolatore](https://openquad-calc.ea4ipw.es) per ottenere il Vf reale e le dimensioni corrette.
+4. Inserisci la frequenza misurata nel [🧮 calcolatore](https://openquad-calc.ea4ipw.es) per ottenere il Vf reale e le dimensioni corrette.
 5. Accorcia ogni loop alla nuova misura — i morsetti per il filo ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) permettono questa regolazione senza rifare la saldatura.
 
 > Vedi [TEORIA.it.md § 2.4](TEORIA.it.md) per maggiori dettagli.
