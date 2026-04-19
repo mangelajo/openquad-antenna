@@ -148,16 +148,14 @@ Las snap-on se abren y cierran con los dedos, no requieren herramientas, y son c
 
 ### 4.3. Procedimiento de ajuste
 
-#### Paso 1 — Determinar el Vf de tu cable
+#### Paso 1 — Construir y calibrar el Vf
 
-Si usas cobre desnudo, salta al paso 2 (Vf = 1.0).
+Todo cable real tiene Vf < 1. El cobre desnudo al aire está alrededor de 0.97 y 0.99, los cables aislados bajan a 0.90–0.97 según el material. El procedimiento recomendado es partir de un valor aproximado y calibrar midiendo:
 
-Si usas cable con aislamiento:
-
-1. Calcula las dimensiones de todos los elementos con Vf = 1.0 usando la [🧮 calculadora online](https://openquad-calc.ea4ipw.es) o las fórmulas (`perímetro driven = 1005 / f(MHz) × 304.8 mm`).
+1. Calcula las dimensiones de todos los elementos con la [🧮 calculadora online](https://openquad-calc.ea4ipw.es) usando como Vf de partida el valor típico de tu cable (0.99 cobre desnudo, ≈0.91 PVC fino, ≈0.95 polietileno, ≈0.97 teflón; tabla completa en [TEORIA.es.md § 2.2](TEORIA.es.md)). La fórmula subyacente es `perímetro = k × λ × Vf`, con `λ = 299,792.458 / f(MHz)` mm y `k_driven ≈ 1.022` (ver [TEORIA.es.md § 1](TEORIA.es.md)).
 2. Monta la antena completa con esas dimensiones.
 3. Mide la frecuencia resonante del conjunto con el VNA.
-4. Introduce la frecuencia medida (y la objetivo) en la [🧮 calculadora](https://openquad-calc.ea4ipw.es) para obtener el Vf real y las dimensiones corregidas.
+4. Introduce la frecuencia medida en la [🧮 calculadora](https://openquad-calc.ea4ipw.es) para obtener el Vf real y las dimensiones corregidas.
 5. Acorta cada loop a la nueva medida — las abrazaderas de hilo ([stls/regular_wire_clamp.stl](../stls/regular_wire_clamp.stl)) permiten este ajuste sin rehacer la soldadura.
 
 > Ver [TEORIA.es.md § 2.4](TEORIA.es.md) para más detalles.

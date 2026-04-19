@@ -12,67 +12,85 @@ Las fórmulas y procedimientos de esta guía son válidos para cualquier frecuen
 
 ## 1. Las fórmulas y de dónde vienen
 
-### 1.1. La constante base: de la velocidad de la luz al valor mágico "1005"
-
-Esta constante aparece publicada en la bibliografía de antenas desde los años 1960 (ver referencias al final), pero vemos de dónde viene.
+### 1.1. La longitud de onda y el factor geométrico del loop
 
 La longitud de onda en el vacío es:
 
     λ = c / f
 
-Donde c = 299,792,458 m/s. Expresado en pies:
+Donde **c = 299,792,458 m/s** (por definición del SI). Expresada directamente en mm con f en MHz:
 
-    λ (pies) = 983.57 / f(MHz)
+    λ (mm) = 299,792.458 / f(MHz)
 
-Un loop cuadrado de una longitud de onda no resuena exactamente en λ teórica. Los efectos de la corriente circulando por las esquinas y la curvatura del campo hacen que necesite ser ligeramente más largo (~2.2%) para resonar. Esto da la constante empírica clásica:
+Un loop cuadrado no resuena exactamente en un perímetro de 1λ. La curva de impedancia del loop (evolución de la parte reactiva con la frecuencia) cruza por cero cuando el perímetro es **~2.2% más largo** que λ. Llamamos **k** a este factor geométrico de resonancia:
 
-    983.57 × 1.021 ≈ 1005
+    k_driven ≈ 1.022
 
-**Nota:** A diferencia de un dipolo, que se *acorta* ~5% respecto al teórico (de 492 a 468) por el "end effect" en sus extremos abiertos, un loop cerrado necesita ser *más largo* porque no tiene extremos abiertos.
+**Nota:** A diferencia de un dipolo, que se *acorta* ~5% respecto al teórico (factor ≈ 0.95) por el "end effect" en sus extremos abiertos, un loop cerrado necesita ser *más largo* porque no tiene extremos abiertos y la geometría de las esquinas introduce reactancia inductiva a λ exacta.
 
 ### 1.2. Fórmulas para cada elemento
 
-Las fórmulas dan el **perímetro total del loop**:
+Las fórmulas dan el **perímetro total del loop**, en mm, partiendo de λ = c/f:
 
-| Elemento | Perímetro (pies) | Perímetro (mm) | Origen |
-|---|---|---|---|
-| Driven element | 1005 / f | 1005 / f × 304.8 | Resonancia a f |
-| Reflector | 1030 / f | 1030 / f × 304.8 | ~2.5% más largo → inductivo |
-| Director 1 | 975 / f | 975 / f × 304.8 | ~3% más corto → capacitivo |
-| Director N+1 | Director_N × 0.97 | Director_N × 0.97 | Serie del 3% |
+| Elemento | Factor k | Perímetro |
+|---|---|---|
+| Driven | k_d ≈ 1.022 | k_d × λ × Vf |
+| Reflector | k_d × 1.025 ≈ 1.047 | k_d × 1.025 × λ × Vf |
+| Director 1 | k_d × 0.970 ≈ 0.991 | k_d × 0.970 × λ × Vf |
+| Director N+1 | × 0.97 sobre el anterior | Director_N × 0.97 |
 
-Donde f está en MHz.
+Donde:
+- **λ (mm) = 299,792.458 / f(MHz)** — longitud de onda en el vacío
+- **Vf** — velocity factor del conductor (ver §2; ≈ 0.99 para cobre desnudo en aire)
+
+**Ejemplo (f = 435 MHz, cobre desnudo, Vf = 0.99):**
+
+    λ        = 299,792.458 / 435          = 689.18 mm
+    Driven   = 1.022 × 689.18 × 0.99      = 697.3 mm
+    Reflector= 1.047 × 689.18 × 0.99      = 714.5 mm
+    Director1= 0.991 × 689.18 × 0.99      = 676.2 mm
 
 **Dimensiones derivadas:**
 
 - Longitud de un lado del cuadrado: `lado = perímetro / 4`
-- Longitud del brazo spreader (del centro a la esquina): `spreader = lado × √2 / 2 = lado × 0.7071`
+- Longitud del brazo spreader (del centro a la esquina): `spreader = lado × √2 / 2 ≈ lado × 0.7071`
 
-### 1.3. De dónde salen las constantes 1030 y 975
+### 1.3. Por qué el reflector es más largo y el director más corto
 
-No son arbitrarias. Parten de la constante base del driven element (1005):
+Los factores relativos respecto al driven no son arbitrarios:
 
-| Constante | Cálculo | Función |
+| Elemento | Factor vs. driven | Por qué |
 |---|---|---|
-| 1005 | 984 × 1.021 | Loop resonante a la frecuencia de trabajo |
-| 1030 | 1005 × 1.025 | Reflector: 2.5% más largo → resuena por debajo → inductivo |
-| 975 | 1005 × 0.970 | Director: 3% más corto → resuena por encima → capacitivo |
+| Driven | 1.000 | Loop resonante a la frecuencia de trabajo |
+| Reflector | 1.025 (+2.5%) | Resuena por debajo → impedancia **inductiva** |
+| Director | 0.970 (−3%) | Resuena por encima → impedancia **capacitiva** |
 
-El reflector inductivo y el director capacitivo producen la fase necesaria para que la antena radie en una sola dirección (del reflector hacia los directores).
+El reflector inductivo y el director capacitivo producen la fase necesaria para que la antena radie en una sola dirección (del reflector hacia los directores). En términos absolutos, sobre k_driven ≈ 1.022:
 
-### 1.4. Espaciados entre elementos
+    k_reflector = 1.022 × 1.025 = 1.047
+    k_director  = 1.022 × 0.970 = 0.991
+
+### 1.4. Equivalencia con la constante histórica "1005/f"
+
+La bibliografía clásica (ARRL Antenna Book, Orr, Cebik) expresa el driven como:
+
+    Perímetro (pies) = 1005 / f(MHz)
+
+Esto equivale a `k_driven × λ` en unidades inglesas, con la suposición implícita **Vf = 1**:
+
+    1005 / 983.57 = 1.0218 ≈ k_driven
+
+En el modelo que usamos aquí, esa constante empírica se descompone en su factor geométrico (k ≈ 1.022) y el Vf del conductor, que siempre es ligeramente < 1 en aire real. La calculadora online usa esta forma explícita.
+
+### 1.5. Espaciados entre elementos
 
 | Tramo | Distancia |
 |---|---|
-| Reflector → Driven | 0.20λ |
-| Driven → Director 1 | 0.15λ |
-| Director → Director | 0.15λ |
+| Reflector → Driven | 0.20 × λ |
+| Driven → Director 1 | 0.15 × λ |
+| Director → Director | 0.15 × λ |
 
-Donde λ es la longitud de onda en espacio libre:
-
-    λ (mm) = 300,000 / f(MHz)
-    λ (pulgadas) = 11,811 / f(MHz)
-    λ (pies) = 984 / f(MHz)
+Donde λ = 299,792.458 / f(MHz) es la longitud de onda en el vacío.
 
 **Importante:** Los espaciados dependen de la longitud de onda en el espacio libre, NO del velocity factor del cable. El boom siempre mide lo mismo independientemente del tipo de cable que uses para los elementos.
 
@@ -82,15 +100,20 @@ Donde λ es la longitud de onda en espacio libre:
 
 ### 2.1. Qué es el Vf
 
-Las fórmulas del apartado anterior asumen **cobre desnudo en espacio libre** (Vf = 1.0). Si usas cable con aislamiento (PVC, polietileno, teflón), la onda viaja más lenta por el conductor, lo que reduce la longitud física necesaria para resonar a la misma frecuencia.
+El Velocity Factor (Vf) es la relación entre la velocidad de propagación de la onda por el conductor y la velocidad de la luz en el vacío:
 
-El aislamiento aumenta la capacitancia distribuida a lo largo del conductor, ralentizando la propagación. Esto significa que necesitas **menos cable** para completar una longitud de onda eléctrica.
+    Vf = v_conductor / c
+
+Un Vf = 1 corresponde al vacío perfecto (por definición). El **aire** tiene permitividad relativa εr ≈ 1.0006 y por tanto el Vf puro en aire es prácticamente 1. Sin embargo, en antenas reales se añaden pequeños efectos — grosor finito del conductor, pérdidas, acoplamiento con el entorno cercano (soportes, mástil, suelo, objetos metálicos próximos) — que reducen el Vf efectivo de un hilo de **cobre desnudo al aire** hasta el rango **≈ 0.97–0.99**. El valor exacto depende del diámetro del hilo, la altura sobre el suelo y las obstrucciones cercanas; en condiciones limpias (antena elevada, lejos de objetos) tiende a 0.99, mientras que instalaciones más comprometidas caen hacia 0.97.
+
+El aislamiento (PVC, polietileno, teflón) aumenta la capacitancia distribuida a lo largo del conductor, ralentizando significativamente la propagación. Esto reduce el Vf y hace que necesites **menos cable** para completar una longitud de onda eléctrica.
 
 ### 2.2. Valores típicos de Vf
 
 | Tipo de cable | Vf aproximado |
 |---|---|
-| Cobre desnudo | 1.00 |
+| Vacío (referencia teórica) | 1.00 |
+| Cobre desnudo al aire | 0.97–0.99 |
 | Aislamiento PTFE/Teflón | 0.97–0.98 |
 | Aislamiento polietileno | 0.95–0.96 |
 | Aislamiento PVC fino | 0.91–0.95 |
@@ -98,67 +121,61 @@ El aislamiento aumenta la capacitancia distribuida a lo largo del conductor, ral
 
 **Atención:** Estos son valores orientativos. El Vf real depende del grosor del aislamiento relativo al diámetro del conductor. Un cable de instalación doméstica (H07V-K, UNE-EN 50525) de 1.5 mm² tiene un forro PVC proporcionalmente más grueso que el mismo cable en 6 mm², y por tanto un Vf más bajo.
 
-### 2.3. Fórmulas corregidas con Vf
+### 2.3. Aplicación del Vf en las fórmulas
 
-Multiplica cada constante por el Vf:
+El Vf multiplica el resultado geométrico del apartado 1.2:
 
-    Driven = (1005 × Vf) / f(MHz) × 304.8    (mm)
-    Driven = (1005 × Vf) / f(MHz) × 12        (pulgadas)
-    Driven = (1005 × Vf) / f(MHz)              (pies)
+    Perímetro (mm) = k × λ × Vf
 
-Lo mismo para las constantes 1030 (reflector) y 975 (director 1).
+Donde:
+- **λ (mm) = 299,792.458 / f(MHz)** — longitud de onda en el vacío
+- **k** — factor geométrico del elemento (driven = 1.022, reflector = 1.047, director 1 = 0.991)
+- **Vf** — velocity factor del conductor
+
+Como el Vf de un cable real es siempre < 1, el perímetro físico queda más corto que el geométrico ideal — el Vf está compensando la capacitancia distribuida que hace que la onda viaje más lenta por el conductor.
 
 ### 2.4. Cómo medir el Vf de tu cable
 
 El método más directo es empírico:
 
-1. Calcula el perímetro del driven element usando las fórmulas para cobre desnudo (Vf = 1.0).
-2. Construye el loop.
-3. Construye también el reflector.
-4. Mide su resonancia utilizando el NanoVNA
-5. Calcula tu Vf real: **Vf = f_resonancia_medida / f_objetivo**
+1. Calcula las dimensiones con Vf = 0.99 (cobre desnudo en aire) como punto de partida.
+2. Construye la antena completa (reflector + driven como mínimo, idealmente todos los elementos).
+3. Mide la frecuencia de resonancia con el NanoVNA.
+4. Calcula tu Vf real: **Vf_nuevo = Vf_inicial × f_medida / f_objetivo**
 
-Por ejemplo: si calculaste para 435 MHz pero el loop resuena a 400 MHz, tu Vf es 400/435 = 0.92.
+Por ejemplo: si partiste de Vf = 0.99 y construiste para 435 MHz, pero el conjunto resuena a 400 MHz, tu Vf real es 0.99 × 400/435 = 0.91.
 
-En mi experiencia, calcular el Vf con únicamente el elemento director no funcionará,
-necesitas tener el reflector, cuya instalación desvía la frecuencia hacia abajo.
+En mi experiencia, calcular el Vf con un elemento aislado no funciona bien, necesitas al menos reflector + driven para que el acoplamiento entre ellos estabilice la resonancia en su valor típico de antena completa.
 
-Esto funciona porque un Vf menor que 1 significa que el conjunto es eléctricamente "demasiado largo" y resuena más abajo de lo esperado.
+Esto funciona porque un Vf menor que 1 significa que el conjunto es eléctricamente "demasiado largo" y resuena más abajo de lo esperado; la diferencia de frecuencia medida/objetivo da exactamente ese factor de corrección.
 
 ---
 
 ## 3. Cálculo de dimensiones para cualquier frecuencia
 
-Para una frecuencia central f (en MHz) y un velocity factor Vf:
+Para una frecuencia central f (en MHz) y un velocity factor Vf, primero calcula la longitud de onda:
+
+    λ (mm) = 299,792.458 / f(MHz)
 
 **Perímetros (mm):**
 
-    Reflector   = (1030 × Vf) / f × 304.8
-    Driven      = (1005 × Vf) / f × 304.8
-    Director 1  = (975 × Vf) / f × 304.8
-    Director 2  = Director 1 × 0.97
-    Director 3  = Director 2 × 0.97
+    Driven      = 1.022 × λ × Vf
+    Reflector   = 1.047 × λ × Vf       (= 1.025 × Driven)
+    Director 1  = 0.991 × λ × Vf       (= 0.970 × Driven)
+    Director 2  = 0.97 × Director 1
+    Director 3  = 0.97 × Director 2
     ...y así sucesivamente
 
-**Perímetros (pulgadas):**
+**Espaciados (mm):** (independientes del Vf — el boom siempre mide lo mismo para una frecuencia dada)
 
-    Reflector   = (1030 × Vf) / f × 12
-    Driven      = (1005 × Vf) / f × 12
-    Director 1  = (975 × Vf) / f × 12
-    Director 2  = Director 1 × 0.97
-    ...
+    Reflector → Driven:   0.20 × λ
+    Driven → Director:    0.15 × λ
+    Director → Director:  0.15 × λ
 
-**Espaciados (mm):** (independientes del Vf)
+**Lado del cuadrado y brazo spreader:**
 
-    Reflector → Driven:   300,000 / f × 0.20
-    Driven → Director:    300,000 / f × 0.15
-    Director → Director:  300,000 / f × 0.15
-
-**Espaciados (pulgadas):**
-
-    Reflector → Driven:   11,811 / f × 0.20
-    Driven → Director:    11,811 / f × 0.15
-    Director → Director:  11,811 / f × 0.15
+    lado     = perímetro / 4
+    spreader = lado × √2 / 2 ≈ lado × 0.7071
 
 ---
 
