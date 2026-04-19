@@ -2,6 +2,10 @@
 
 **Por EA4IPW — Caso práctico: construcción de un quad de 5 elementos para 435 MHz**
 
+<p align="center">
+  <img src="../web/diagram.jpeg" width="420" alt="Diagrama del diseño"/>
+</p>
+
 ---
 
 ## 1. Qué es este diseño
@@ -21,10 +25,6 @@ Esta guía documenta el proceso práctico de construcción y ajuste paso a paso.
 > 📘 **[TEORIA.es.md](TEORIA.es.md) — Fundamentos teóricos y referencias**
 
 Las fórmulas son válidas para cualquier frecuencia; como ejemplo práctico detallado se documenta una construcción real para la banda de 70 cm (435 MHz) con cable de instalación PVC de 0.5 mm².
-
-<p align="center">
-  <img src="../web/diagram.jpeg" width="420" alt="Diagrama del diseño"/>
-</p>
 
 <p align="center">
   <img src="images/pics/70cm_open.jpeg" width="420" alt="Antena desplegada (5 elementos, 435 MHz)"/>
