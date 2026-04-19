@@ -13,7 +13,12 @@ DOCS_IMG_DIR := docs/images/generated
 STLS := $(BUILD)/all_in_one.stl $(BUILD)/driven_element.stl $(BUILD)/regular_wire_clamp.stl
 PNGS := $(STLS:.stl=.png)
 
-.PHONY: help all matrix zip renders docs-images clean
+.PHONY: help all matrix zip renders docs-images test serve clean
+
+# Calculator / web app
+NODE    ?= node
+PORT    ?= 8765
+WEB_DIR := web
 
 help: ## Show this help
 	@awk 'BEGIN{FS=":.*## "; printf "Targets:\n"} /^[a-zA-Z_-]+:.*## / {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -22,6 +27,8 @@ help: ## Show this help
 	@printf "  \033[36m%-22s\033[0m %s\n" "OPENSCAD_FLAGS" "flags for STL generation [$(OPENSCAD_FLAGS)]"
 	@printf "  \033[36m%-22s\033[0m %s\n" "RENDER_FLAGS" "flags for PNG renders"
 	@printf "  \033[36m%-22s\033[0m %s\n" "RENDER_COLORSCHEME" "OpenSCAD color scheme name (see top of Makefile)"
+	@printf "  \033[36m%-22s\033[0m %s\n" "NODE" "node binary for 'make test' [$(NODE)]"
+	@printf "  \033[36m%-22s\033[0m %s\n" "PORT" "port for 'make serve' [$(PORT)]"
 	@printf "\nTip: use 'make -j4 ...' for parallel builds.\n"
 
 all: $(STLS) ## Build the 3 default STLs into build/
@@ -122,6 +129,13 @@ renders: $(PNGS) $(MATRIX_PNGS) ## Render PNG previews of every STL
 docs-images: $(MATRIX_PNGS) ## Render matrix PNGs and copy them to docs/images/generated/
 	mkdir -p $(DOCS_IMG_DIR)
 	cp $(MATRIX_PNGS) $(DOCS_IMG_DIR)/
+
+test: ## Run the calculator unit tests (node --test)
+	$(NODE) --test $(WEB_DIR)/*.test.js
+
+serve: ## Serve web/ locally (default port 8765; override with PORT=…)
+	@echo "Serving $(WEB_DIR)/ at http://localhost:$(PORT)  (Ctrl-C to stop)"
+	cd $(WEB_DIR) && python3 -m http.server $(PORT)
 
 clean: ## Remove the build/ directory
 	rm -rf $(BUILD)
