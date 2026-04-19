@@ -2,6 +2,10 @@
 
 **作者 EA4IPW —— 实例：为 435 MHz 构建 5 单元 quad 天线**
 
+<p align="center">
+  <img src="../web/diagram.jpeg" width="420" alt="设计示意图"/>
+</p>
+
 ---
 
 ## 1. 本设计是什么
@@ -21,6 +25,11 @@
 > 📘 **[TEORIA.zh.md](TEORIA.zh.md) —— 理论基础与参考文献**
 
 这些公式对任何频率都适用；作为详细的实例，本文记录了针对 70 cm 频段（435 MHz）、使用 0.5 mm² PVC 安装导线的真实制作过程。
+
+<p align="center">
+  <img src="images/pics/70cm_open.jpeg" width="420" alt="展开的天线（5 单元，435 MHz）"/>
+  <img src="images/pics/70cm_folded.jpeg" width="420" alt="折叠后便于运输的天线"/>
+</p>
 
 ---
 
@@ -89,6 +98,17 @@
 
 对于不超过 50W 的功率，细导线完全没有问题。实际的限制来自焊点与绝缘层（PVC 在约 70°C 时会软化），而不是来自导体本身。
 
+在接续导线或闭合环形单元时，先从每端剥出约 10 mm，将两端并排贴合（可以拧合，或使用 Western Union 接法），用足量锡料焊接，并用热缩管保护接头。
+
+<p align="center">
+  <img src="images/pics/10mm_extra_soldering.jpg" width="300" alt="焊接前剥出 10 mm 的导线"/>
+  <img src="images/pics/soldering_edges.jpg" width="300" alt="焊接前两端对接"/>
+</p>
+<p align="center">
+  <img src="images/pics/soldered_edges.jpg" width="300" alt="已焊接的接头"/>
+  <img src="images/pics/thermoretractile.jpg" width="300" alt="在焊接处套上热缩管"/>
+</p>
+
 ### 3.2. 主梁
 
 铝合金是理想材料：轻便、刚性好且易于加工。根据天线尺寸选择合适截面的方管或圆管即可。对于 UHF，PVC 管也完全适用。
@@ -99,9 +119,17 @@
 
 如果主梁是圆形而非方形，在电学上没有差别。唯一需要考虑的是机械方面：确保所有撑杆的 hub（集线座）固定在相同的角度方向（参见 3.5 节）。
 
+<p align="center">
+  <img src="images/pics/reflector_assembly_closed_boom.jpg" width="420" alt="安装在 PVC 主梁上的元件"/>
+</p>
+
 ### 3.3. 撑杆
 
 可使用玻璃纤维、山毛榉木或 PVC 制成的棒。必须是非导电材料。合适的直径取决于频段：在 VHF/UHF 频段，4–8 mm 的棒即可胜任。
+
+<p align="center">
+  <img src="images/pics/element_preparation.jpg" width="420" alt="3D 打印的 hub 与按长度切好的撑杆"/>
+</p>
 
 ### 3.4. 紧固件与固定
 
@@ -111,6 +139,10 @@
 - **M3 螺母 —— 每元件 4 颗。** 在拧紧螺钉前嵌入每个夹具上的六角凹槽中。
 - **橡皮筋 —— 每元件 1 条。** 缠绕在折叠后的 `all_in_one` 组件上，在运输和存放期间让四个夹具保持抵靠主梁环的闭合状态。
 
+<p align="center">
+  <img src="images/pics/element_assembly_screws.jpg" width="420" alt="已安装 M3 紧固件的模块"/>
+</p>
+
 ### 3.5. 元件的对齐
 
 所有方形环形单元都必须在主梁上**保持相同的旋转方向**。如果某个元件相对于其他元件发生旋转，互耦会恶化，因为电流段不再保持平行。
@@ -119,6 +151,11 @@
 - **45° 旋转：** 互耦严重恶化，增益与 F/B 都会下降。
 
 使用方形主梁时对齐很自然。使用圆形主梁时，应以紧定螺钉、贯穿销或一滴胶水来保证方向。
+
+<p align="center">
+  <img src="images/pics/reflector_assembly_open.jpg" width="320" alt="展开的元件（撑杆呈 X 形打开）"/>
+  <img src="images/pics/reflector_assembly_closed.jpg" width="320" alt="折叠的元件（撑杆合拢）"/>
+</p>
 
 ---
 
@@ -131,6 +168,10 @@
 - 电烙铁与焊锡
 - 毫米刻度尺或数显卡尺
 - 细口斜口钳
+
+<p align="center">
+  <img src="images/pics/nanovna_swr.jpg" width="420" alt="NanoVNA 显示天线的 Smith 图与 SWR"/>
+</p>
 
 ### 4.2. 扼流巴伦（可选，但建议用于测量）
 
@@ -145,6 +186,11 @@
 卡扣式铁氧体用手指即可开合，无需工具，且可完全重复使用。
 
 **注：** 许多商用 quad 天线并未使用扼流巴伦也能良好工作。quad 的馈电点几何本身就具有良好的平衡性。扼流巴伦主要是为了在调谐时获得可靠的测量，而不是正常使用的必要条件。
+
+<p align="center">
+  <img src="images/pics/driven_element_solder.jpg" width="320" alt="驱动元焊接处的特写"/>
+  <img src="images/pics/driven_element.jpeg" width="320" alt="带有同轴电缆并做密封处理的驱动元"/>
+</p>
 
 ### 4.3. 调谐步骤
 
@@ -176,6 +222,11 @@
 安装好所有元件之后，可能需要对驱动元进行微调，以使频率居中。如果引向器剪裁得当，通常无需再调整。
 
 **提示：** 在 VNA 上使用 SWR 与频率的曲线视图（而不仅仅是史密斯圆图），可清楚地看到最低点与带宽所在位置。
+
+<p align="center">
+  <img src="images/pics/wire_clam_screw.jpg" width="320" alt="导线夹 —— 内六角螺钉一侧"/>
+  <img src="images/pics/wire_clam_nut.jpg" width="320" alt="导线夹 —— 螺母一侧"/>
+</p>
 
 ---
 
@@ -230,6 +281,10 @@
 
 > 要对照其他配置（2–7 单元）的理论预期值，以及与 Yagi 的等效关系，请参见 [TEORIA.zh.md § 4](TEORIA.zh.md)。
 
+<p align="center">
+  <img src="images/pics/70cm_open_2.jpeg" width="520" alt="完成的 5 单元 435 MHz 天线的 3/4 视角"/>
+</p>
+
 ---
 
 ## 7. 预构建零件
@@ -239,6 +294,11 @@
 如果预渲染的组合都不符合您的硬件，请参见下方 [§ 7.4](#74-构建自定义尺寸) 自行渲染。
 
 ### 7.1. 一体化模块（boom 卡环 + 4 个夹具）
+
+<p align="center">
+  <img src="images/pics/aio_open.jpg" width="320" alt="夹具展开的一体化模块"/>
+  <img src="images/pics/aio_closed.jpg" width="320" alt="夹具收拢抵靠主梁卡环的一体化模块"/>
+</p>
 
 行为 boom 形状 × boom 尺寸，列为 spreader 直径。
 

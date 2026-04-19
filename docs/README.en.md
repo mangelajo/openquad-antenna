@@ -2,6 +2,10 @@
 
 **By EA4IPW — Reference build: a 5-element quad for 435 MHz**
 
+<p align="center">
+  <img src="../web/diagram.jpeg" width="420" alt="Design diagram"/>
+</p>
+
 ---
 
 ## 1. What this design is
@@ -21,6 +25,11 @@ This guide documents the practical construction and tuning process step by step.
 > 📘 **[TEORIA.en.md](TEORIA.en.md) — Theoretical foundations and references**
 
 The formulas are valid for any frequency; as a detailed practical example, a real build for the 70 cm band (435 MHz) with 0.5 mm² PVC installation wire is documented.
+
+<p align="center">
+  <img src="images/pics/70cm_open.jpeg" width="420" alt="Deployed antenna (5 elements, 435 MHz)"/>
+  <img src="images/pics/70cm_folded.jpeg" width="420" alt="Antenna folded for transport"/>
+</p>
 
 ---
 
@@ -89,6 +98,17 @@ At HF, where the elements are much larger, copper wire of 1–2 mm diameter (bar
 
 For powers up to 50W there is no problem with thin wire. The practical limit is set by the solder joints and the insulation (PVC softens at ~70°C), not by the conductor.
 
+When splicing lengths or closing a loop, strip about 10 mm from each end, join them in parallel (by twisting or with a Western Union splice), solder generously, and protect the joint with heat-shrink tubing.
+
+<p align="center">
+  <img src="images/pics/10mm_extra_soldering.jpg" width="300" alt="10 mm of stripped wire before soldering"/>
+  <img src="images/pics/soldering_edges.jpg" width="300" alt="Splice of the two ends before soldering"/>
+</p>
+<p align="center">
+  <img src="images/pics/soldered_edges.jpg" width="300" alt="Soldered splice"/>
+  <img src="images/pics/thermoretractile.jpg" width="300" alt="Heat-shrink applied over the solder joint"/>
+</p>
+
 ### 3.2. Boom
 
 Aluminum is ideal: light, stiff and easy to work with. A square or circular tube of a cross-section appropriate to the size of the antenna is sufficient. For UHF, a PVC tube also works perfectly.
@@ -99,9 +119,17 @@ A wooden boom works the same but is heavier and absorbs moisture. Its dielectric
 
 If the boom is circular instead of square, there is no electrical difference. The only consideration is mechanical: making sure the spreader hubs are fixed in the same angular orientation (see section 3.5).
 
+<p align="center">
+  <img src="images/pics/reflector_assembly_closed_boom.jpg" width="420" alt="Element mounted on a PVC boom"/>
+</p>
+
 ### 3.3. Spreaders
 
 Fiberglass, beech or PVC rods. They must be made of a non-conductive material. The appropriate diameter depends on the band: at VHF/UHF, 4–8 mm rods are sufficient.
+
+<p align="center">
+  <img src="images/pics/element_preparation.jpg" width="420" alt="Printed hubs and cut spreader rods ready to assemble"/>
+</p>
 
 ### 3.4. Fasteners and retention
 
@@ -111,6 +139,10 @@ Each element needs a small amount of standard hardware to close the clamps onto 
 - **M3 nuts — 4 per element.** Seat into the hex pocket on each clamp before tightening the screw.
 - **Rubber band — 1 per element.** Wraps around the folded `all_in_one` block to keep the four clamps closed against the boom collar during transport and storage.
 
+<p align="center">
+  <img src="images/pics/element_assembly_screws.jpg" width="420" alt="Assembled blocks with M3 hardware"/>
+</p>
+
 ### 3.5. Element alignment
 
 All the square loops must be **aligned in the same rotational orientation** on the boom. If one element is rotated with respect to the others, the coupling between elements degrades because the current segments are no longer parallel.
@@ -119,6 +151,11 @@ All the square loops must be **aligned in the same rotational orientation** on t
 - **45° rotation:** seriously degraded coupling, loss of gain and F/B.
 
 With a square boom, alignment is natural. With a circular boom, ensure orientation with a set screw, a through pin, or a drop of glue.
+
+<p align="center">
+  <img src="images/pics/reflector_assembly_open.jpg" width="320" alt="Element deployed (spreaders open in X)"/>
+  <img src="images/pics/reflector_assembly_closed.jpg" width="320" alt="Element folded (spreaders closed)"/>
+</p>
 
 ---
 
@@ -131,6 +168,10 @@ With a square boom, alignment is natural. With a circular boom, ensure orientati
 - Soldering iron and solder
 - Millimeter ruler or digital caliper
 - Fine cutting pliers
+
+<p align="center">
+  <img src="images/pics/nanovna_swr.jpg" width="420" alt="NanoVNA showing the Smith chart and SWR of the antenna"/>
+</p>
 
 ### 4.2. Choke balun (optional but recommended for measurement)
 
@@ -145,6 +186,11 @@ Reference for snap-on ferrites valid for VHF/UHF: Fair-Rite 0443164251 (cable �
 The snap-ons open and close with your fingers, require no tools, and are completely reusable.
 
 **Note:** Many commercial quad-type antennas have no choke and work perfectly. The quad has an intrinsically well-balanced geometry at the feedpoint. The choke is mainly for obtaining reliable measurements during tuning, not a requirement for normal use.
+
+<p align="center">
+  <img src="images/pics/driven_element_solder.jpg" width="320" alt="Close-up of the driven element solder joint"/>
+  <img src="images/pics/driven_element.jpeg" width="320" alt="Driven element with coax and sealing"/>
+</p>
 
 ### 4.3. Tuning procedure
 
@@ -176,6 +222,11 @@ Every real wire has Vf < 1. Bare copper in air sits around 0.97–0.99; insulate
 After mounting all the elements, a fine touch-up of the driven element may be needed to center the frequency. The directors rarely need a touch-up if they were cut correctly.
 
 **Tip:** On the VNA, use the SWR vs. frequency view (not just the Smith chart) to clearly see where the minimum and the bandwidth are.
+
+<p align="center">
+  <img src="images/pics/wire_clam_screw.jpg" width="320" alt="Wire clamp — Allen screw side"/>
+  <img src="images/pics/wire_clam_nut.jpg" width="320" alt="Wire clamp — nut side"/>
+</p>
 
 ---
 
@@ -230,6 +281,10 @@ The antenna documented as an example in this guide (5 elements, 435 MHz, 0.5 mm�
 
 > To compare with the theoretical values expected in other configurations (2–7 elements) and the equivalence with Yagi, see [TEORIA.en.md § 4](TEORIA.en.md).
 
+<p align="center">
+  <img src="images/pics/70cm_open_2.jpeg" width="520" alt="3/4 view of the completed 5-element 435 MHz antenna"/>
+</p>
+
 ---
 
 ## 7. Pre-built parts
@@ -239,6 +294,11 @@ CI publishes a pre-rendered set of STLs for the most common boom and spreader si
 If none of the pre-rendered combinations matches your hardware, see [§ 7.4](#74-build-a-custom-size) below to render your own.
 
 ### 7.1. All-in-one block (boom collar + 4 clamps)
+
+<p align="center">
+  <img src="images/pics/aio_open.jpg" width="320" alt="All-in-one block with clamps open"/>
+  <img src="images/pics/aio_closed.jpg" width="320" alt="All-in-one block with clamps closed against the boom collar"/>
+</p>
 
 Boom shape × boom dimension as rows, spreader diameter as columns.
 

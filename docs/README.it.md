@@ -2,6 +2,10 @@
 
 **Di EA4IPW — Caso pratico: costruzione di una quad di 5 elementi per 435 MHz**
 
+<p align="center">
+  <img src="../web/diagram.jpeg" width="420" alt="Diagramma del progetto"/>
+</p>
+
 ---
 
 ## 1. Cos'è questo progetto
@@ -21,6 +25,11 @@ Questa guida documenta il processo pratico di costruzione e regolazione passo pa
 > 📘 **[TEORIA.it.md](TEORIA.it.md) — Fondamenti teorici e riferimenti**
 
 Le formule sono valide per qualsiasi frequenza; come esempio pratico dettagliato è documentata una costruzione reale per la banda dei 70 cm (435 MHz) con cavo da installazione PVC da 0.5 mm².
+
+<p align="center">
+  <img src="images/pics/70cm_open.jpeg" width="420" alt="Antenna dispiegata (5 elementi, 435 MHz)"/>
+  <img src="images/pics/70cm_folded.jpeg" width="420" alt="Antenna richiusa per il trasporto"/>
+</p>
 
 ---
 
@@ -89,6 +98,17 @@ In HF, dove gli elementi sono molto più grandi, si usa tipicamente cavo di rame
 
 Per potenze fino a 50W non c'è alcun problema con cavo sottile. Il limite pratico è dato dalle saldature e dall'isolamento (il PVC si ammorbidisce a ~70°C), non dal conduttore.
 
+Quando unisci tratte di cavo o chiudi un loop, spela circa 10 mm da ciascuna estremità, uniscile in parallelo (intrecciando o con una giunzione Western Union), salda con stagno abbondante e proteggi la giunzione con guaina termorestringente.
+
+<p align="center">
+  <img src="images/pics/10mm_extra_soldering.jpg" width="300" alt="10 mm di cavo spelato prima di saldare"/>
+  <img src="images/pics/soldering_edges.jpg" width="300" alt="Giunzione delle due estremità prima della saldatura"/>
+</p>
+<p align="center">
+  <img src="images/pics/soldered_edges.jpg" width="300" alt="Giunzione saldata"/>
+  <img src="images/pics/thermoretractile.jpg" width="300" alt="Guaina termorestringente applicata sulla saldatura"/>
+</p>
+
 ### 3.2. Boom
 
 L'alluminio è ideale: leggero, rigido e facile da lavorare. Un tubo quadrato o circolare di sezione adeguata alle dimensioni dell'antenna è sufficiente. Per UHF anche un tubo di PVC va perfettamente bene.
@@ -99,9 +119,17 @@ Un boom di legno funziona ugualmente ma è più pesante e assorbe umidità. Il s
 
 Se il boom è circolare invece che quadrato, non c'è differenza elettrica. L'unica considerazione è meccanica: assicurarsi che gli hub degli spreader rimangano fissati nella stessa orientazione angolare (vedi sezione 3.5).
 
+<p align="center">
+  <img src="images/pics/reflector_assembly_closed_boom.jpg" width="420" alt="Elemento montato su boom di PVC"/>
+</p>
+
 ### 3.3. Spreader
 
 Aste di fibra di vetro, faggio, o PVC. Devono essere di materiale non conduttore. Il diametro appropriato dipende dalla banda: in VHF/UHF, aste da 4–8 mm sono sufficienti.
+
+<p align="center">
+  <img src="images/pics/element_preparation.jpg" width="420" alt="Hub stampati e aste spreader tagliate, pronte al montaggio"/>
+</p>
 
 ### 3.4. Viteria e ritenzione
 
@@ -111,6 +139,10 @@ Ogni elemento richiede una piccola quantità di viteria standard per chiudere le
 - **Dadi M3 — 4 per elemento.** Si alloggiano nella tasca esagonale di ogni clamp prima di serrare la vite.
 - **Elastico — 1 per elemento.** Avvolge il blocco `all_in_one` ripiegato per tenere le quattro clamp chiuse contro il collare del boom durante trasporto e stoccaggio.
 
+<p align="center">
+  <img src="images/pics/element_assembly_screws.jpg" width="420" alt="Blocchi montati con viteria M3"/>
+</p>
+
 ### 3.5. Allineamento degli elementi
 
 Tutti i loop quadrati devono essere **allineati nella stessa orientazione rotazionale** sul boom. Se un elemento viene ruotato rispetto agli altri, l'accoppiamento tra gli elementi degrada perché i segmenti di corrente cessano di essere paralleli.
@@ -119,6 +151,11 @@ Tutti i loop quadrati devono essere **allineati nella stessa orientazione rotazi
 - **45° di rotazione:** accoppiamento seriamente degradato, perdita di guadagno e F/B.
 
 Con boom quadrato l'allineamento è naturale. Con boom circolare, assicura l'orientazione con un grano (vite senza testa), una spina passante, o una goccia di colla.
+
+<p align="center">
+  <img src="images/pics/reflector_assembly_open.jpg" width="320" alt="Elemento dispiegato (spreader aperti a X)"/>
+  <img src="images/pics/reflector_assembly_closed.jpg" width="320" alt="Elemento richiuso (spreader chiusi)"/>
+</p>
 
 ---
 
@@ -131,6 +168,10 @@ Con boom quadrato l'allineamento è naturale. Con boom circolare, assicura l'ori
 - Saldatore e stagno
 - Righello millimetrato o calibro digitale
 - Tronchesine di precisione
+
+<p align="center">
+  <img src="images/pics/nanovna_swr.jpg" width="420" alt="NanoVNA che mostra la carta di Smith e l'SWR dell'antenna"/>
+</p>
 
 ### 4.2. Choke balun (opzionale ma raccomandato per la misura)
 
@@ -145,6 +186,11 @@ Riferimento di ferriti snap-on adatte per VHF/UHF: Fair-Rite 0443164251 (cavo �
 Le snap-on si aprono e chiudono con le dita, non richiedono attrezzi, e sono completamente riutilizzabili.
 
 **Nota:** Molte antenne commerciali di tipo quad non hanno choke e funzionano perfettamente. La quad ha una geometria intrinsecamente ben bilanciata al feedpoint. Il choke serve principalmente per ottenere misure affidabili durante la regolazione, non è un requisito per l'uso normale.
+
+<p align="center">
+  <img src="images/pics/driven_element_solder.jpg" width="320" alt="Dettaglio della saldatura del driven"/>
+  <img src="images/pics/driven_element.jpeg" width="320" alt="Driven element con coassiale e sigillatura"/>
+</p>
 
 ### 4.3. Procedura di regolazione
 
@@ -176,6 +222,11 @@ Ogni cavo reale ha Vf < 1. Il rame nudo in aria si aggira tra 0.97 e 0.99; i cav
 Dopo aver montato tutti gli elementi, può essere necessario un ritocco fine del driven element per centrare la frequenza. I direttori raramente necessitano di ritocchi se sono stati tagliati correttamente.
 
 **Tip:** Sul VNA, usa la vista di SWR vs frequenza (non solo la carta di Smith) per vedere chiaramente dov'è il minimo e la larghezza di banda.
+
+<p align="center">
+  <img src="images/pics/wire_clam_screw.jpg" width="320" alt="Morsetto del filo — lato della vite a brugola"/>
+  <img src="images/pics/wire_clam_nut.jpg" width="320" alt="Morsetto del filo — lato del dado"/>
+</p>
 
 ---
 
@@ -230,6 +281,10 @@ L'antenna documentata come esempio in questa guida (5 elementi, 435 MHz, cavo PV
 
 > Per confrontare con i valori teorici attesi in altre configurazioni (2–7 elementi) e l'equivalenza con Yagi, vedi [TEORIA.it.md § 4](TEORIA.it.md).
 
+<p align="center">
+  <img src="images/pics/70cm_open_2.jpeg" width="520" alt="Vista 3/4 dell'antenna di riferimento a 5 elementi per 435 MHz"/>
+</p>
+
 ---
 
 ## 7. Parti pre-costruite
@@ -239,6 +294,11 @@ Il CI pubblica un set pre-renderizzato di STL per le dimensioni di boom e spread
 Se nessuna delle combinazioni pre-renderizzate corrisponde al tuo hardware, consulta il [§ 7.4](#74-costruire-una-dimensione-personalizzata) qui sotto per renderizzare la tua.
 
 ### 7.1. Blocco tutto-in-uno (collare del boom + 4 morsetti)
+
+<p align="center">
+  <img src="images/pics/aio_open.jpg" width="320" alt="Blocco all-in-one con i morsetti aperti"/>
+  <img src="images/pics/aio_closed.jpg" width="320" alt="Blocco all-in-one con i morsetti chiusi contro il collare del boom"/>
+</p>
 
 Forma del boom × dimensione del boom come righe, diametro dello spreader come colonne.
 
