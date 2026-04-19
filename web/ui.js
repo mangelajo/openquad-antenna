@@ -46,6 +46,7 @@ const LANGS = {
     "page.h1": "OpenQuad — Calculadora Cubical Quad",
     "page.intro": "Calculadora paramétrica para antena cubical quad modular (EA4IPW). Genera las dimensiones para tu frecuencia, mide la resonancia con reflector + driven montados, y obtén el Vf real y el corte/ajuste necesario en cada elemento.",
     "page.formulas-hint": `Fórmulas y procedimiento: ver <a href="${T_es}">TEORIA.es.md</a> y <a href="${R_es}">README.es.md</a>.`,
+    "page.diagram-alt": "Diagrama de la antena cubical quad",
     "sec1.title": "1. Parámetros iniciales",
     "sec1.freq": "Frecuencia objetivo (MHz)",
     "sec1.vf-initial": "Vf inicial (cable)",
@@ -113,6 +114,7 @@ const LANGS = {
     "page.h1": "OpenQuad — Cubical Quad Calculator",
     "page.intro": "Parametric calculator for a modular cubical quad antenna (EA4IPW). Generates the dimensions for your frequency, lets you measure resonance with reflector + driven mounted, and gives the real Vf and the required cut/adjustment for each element.",
     "page.formulas-hint": `Formulas and procedure: see <a href="${T_en}">TEORIA.en.md</a> and <a href="${R_en}">README.en.md</a>.`,
+    "page.diagram-alt": "Cubical quad antenna diagram",
     "sec1.title": "1. Initial parameters",
     "sec1.freq": "Target frequency (MHz)",
     "sec1.vf-initial": "Initial Vf (wire)",
@@ -180,6 +182,7 @@ const LANGS = {
     "page.h1": "OpenQuad — Calcolatore Cubical Quad",
     "page.intro": "Calcolatore parametrico per antenna cubical quad modulare (EA4IPW). Genera le dimensioni per la tua frequenza, misura la risonanza con riflettore + driven montati, e fornisce il Vf reale e il taglio/regolazione necessaria per ogni elemento.",
     "page.formulas-hint": `Formule e procedura: vedi <a href="${T_it}">TEORIA.it.md</a> e <a href="${R_it}">README.it.md</a>.`,
+    "page.diagram-alt": "Diagramma dell'antenna cubical quad",
     "sec1.title": "1. Parametri iniziali",
     "sec1.freq": "Frequenza target (MHz)",
     "sec1.vf-initial": "Vf iniziale (cavo)",
@@ -247,6 +250,7 @@ const LANGS = {
     "page.h1": "OpenQuad — Calculadora Cubical Quad",
     "page.intro": "Calculadora paramétrica para antena cubical quad modular (EA4IPW). Gera as dimensões para a tua frequência, mede a ressonância com refletor + driven montados, e obtém o Vf real e o corte/ajuste necessário em cada elemento.",
     "page.formulas-hint": `Fórmulas e procedimento: ver <a href="${T_pt}">TEORIA.pt.md</a> e <a href="${R_pt}">README.pt.md</a>.`,
+    "page.diagram-alt": "Diagrama da antena cubical quad",
     "sec1.title": "1. Parâmetros iniciais",
     "sec1.freq": "Frequência alvo (MHz)",
     "sec1.vf-initial": "Vf inicial (cabo)",
@@ -314,6 +318,7 @@ const LANGS = {
     "page.h1": "OpenQuad — キュービカルクワッド計算機",
     "page.intro": "モジュラー式キュービカルクワッドアンテナ（EA4IPW）のパラメトリック計算機。希望周波数の寸法を生成し、リフレクターとドリブンを組み立てた状態で共振を測定して、実際の Vf と各エレメントに必要な切断・調整量を算出します。",
     "page.formulas-hint": `式と手順: <a href="${T_ja}">TEORIA.ja.md</a> および <a href="${R_ja}">README.ja.md</a> を参照。`,
+    "page.diagram-alt": "キュービカルクワッドアンテナの図",
     "sec1.title": "1. 初期パラメータ",
     "sec1.freq": "目標周波数 (MHz)",
     "sec1.vf-initial": "初期 Vf（ケーブル）",
@@ -381,6 +386,7 @@ const LANGS = {
     "page.h1": "OpenQuad — 立方四方天线计算器",
     "page.intro": "模块化立方四方天线（EA4IPW）的参数化计算器。生成所需频率的尺寸，安装反射器和驱动元后测量谐振，得出实际 Vf 和每个元件所需的剪切/调整量。",
     "page.formulas-hint": `公式与步骤：参见 <a href="${T_zh}">TEORIA.zh.md</a> 和 <a href="${R_zh}">README.zh.md</a>。`,
+    "page.diagram-alt": "立方四方天线示意图",
     "sec1.title": "1. 初始参数",
     "sec1.freq": "目标频率 (MHz)",
     "sec1.vf-initial": "初始 Vf（导线）",
@@ -502,6 +508,9 @@ function translateAll() {
   });
   document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
     el.placeholder = t(el.getAttribute("data-i18n-placeholder"), params);
+  });
+  document.querySelectorAll("[data-i18n-alt]").forEach(el => {
+    el.alt = t(el.getAttribute("data-i18n-alt"), params);
   });
 }
 
