@@ -22,6 +22,15 @@ Esta guía documenta el proceso práctico de construcción y ajuste paso a paso.
 
 Las fórmulas son válidas para cualquier frecuencia; como ejemplo práctico detallado se documenta una construcción real para la banda de 70 cm (435 MHz) con cable de instalación PVC de 0.5 mm².
 
+<p align="center">
+  <img src="../web/diagram.jpeg" width="420" alt="Diagrama del diseño"/>
+</p>
+
+<p align="center">
+  <img src="images/pics/70cm_open.jpeg" width="420" alt="Antena desplegada (5 elementos, 435 MHz)"/>
+  <img src="images/pics/70cm_folded.jpeg" width="420" alt="Antena plegada para transporte"/>
+</p>
+
 ---
 
 ## 2. Dimensiones para la construcción de referencia (435 MHz, Vf = 0.91)
@@ -89,6 +98,17 @@ En HF, donde los elementos son mucho más grandes, se usa típicamente cable de 
 
 Para potencias de hasta 50W no hay ningún problema con cable fino. El límite práctico lo ponen las soldaduras y el aislamiento (el PVC se ablanda a ~70°C), no el conductor.
 
+Al unir tramos o cerrar un loop, pela unos 10 mm de cada extremo, únelos en paralelo (trenzando o con un empalme Western Union), suelda con aporte generoso y protege la unión con termorretráctil.
+
+<p align="center">
+  <img src="images/pics/10mm_extra_soldering.jpg" width="300" alt="10 mm de cable pelado antes de soldar"/>
+  <img src="images/pics/soldering_edges.jpg" width="300" alt="Empalme de los dos extremos antes de la soldadura"/>
+</p>
+<p align="center">
+  <img src="images/pics/soldered_edges.jpg" width="300" alt="Empalme soldado"/>
+  <img src="images/pics/thermoretractile.jpg" width="300" alt="Termorretráctil aplicado sobre la soldadura"/>
+</p>
+
 ### 3.2. Boom
 
 El aluminio es ideal: ligero, rígido y fácil de trabajar. Un tubo cuadrado o circular de sección apropiada al tamaño de la antena es suficiente. Para UHF un tubo de PVC también sirve perfectamente.
@@ -99,9 +119,17 @@ Un boom de madera funciona igual pero es más pesado y absorbe humedad. Su efect
 
 Si el boom es circular en vez de cuadrado, no hay diferencia eléctrica. La única consideración es mecánica: asegurar que los hubs de los spreaders queden fijados en la misma orientación angular (ver sección 3.5).
 
+<p align="center">
+  <img src="images/pics/reflector_assembly_closed_boom.jpg" width="420" alt="Elemento montado sobre boom de PVC"/>
+</p>
+
 ### 3.3. Spreaders
 
 Varillas de fibra de vidrio, haya, o PVC. Deben ser de material no conductor. El diámetro apropiado depende de la banda: en VHF/UHF, varillas de 4–8 mm son suficientes
+
+<p align="center">
+  <img src="images/pics/element_preparation.jpg" width="420" alt="Hubs impresos y varillas de spreader cortadas a medida"/>
+</p>
 
 ### 3.4. Tornillería y retención
 
@@ -111,6 +139,10 @@ Cada elemento necesita una pequeña cantidad de tornillería estándar para cerr
 - **Tuercas M3 — 4 por elemento.** Se asientan en el hueco hexagonal de cada abrazadera antes de apretar el tornillo.
 - **Goma elástica — 1 por elemento.** Envuelve el bloque `all_in_one` plegado para mantener las cuatro abrazaderas cerradas contra el collar del boom durante transporte y almacenamiento.
 
+<p align="center">
+  <img src="images/pics/element_assembly_screws.jpg" width="420" alt="Bloques montados con tornillería M3"/>
+</p>
+
 ### 3.5. Alineación de los elementos
 
 Todos los loops cuadrados deben estar **alineados en la misma orientación rotacional** sobre el boom. Si se rota un elemento respecto a los demás, el acoplamiento entre elementos se degrada porque los segmentos de corriente dejan de ser paralelos.
@@ -119,6 +151,11 @@ Todos los loops cuadrados deben estar **alineados en la misma orientación rotac
 - **45° de rotación:** acoplamiento seriamente degradado, pérdida de ganancia y F/B.
 
 Con boom cuadrado la alineación es natural. Con boom circular, asegura la orientación con un tornillo prisionero, un pin pasante, o una gota de pegamento.
+
+<p align="center">
+  <img src="images/pics/reflector_assembly_open.jpg" width="320" alt="Elemento desplegado (spreaders abiertos en X)"/>
+  <img src="images/pics/reflector_assembly_closed.jpg" width="320" alt="Elemento plegado (spreaders cerrados)"/>
+</p>
 
 ---
 
@@ -131,6 +168,10 @@ Con boom cuadrado la alineación es natural. Con boom circular, asegura la orien
 - Soldador y estaño
 - Regla milimetrada o calibre digital
 - Alicates de corte fino
+
+<p align="center">
+  <img src="images/pics/nanovna_swr.jpg" width="420" alt="NanoVNA mostrando carta de Smith y SWR de la antena"/>
+</p>
 
 ### 4.2. Choke balun (opcional pero recomendado para la medida)
 
@@ -145,6 +186,11 @@ Referencia de ferritas snap-on válidas para VHF/UHF: Fair-Rite 0443164251 (cabl
 Las snap-on se abren y cierran con los dedos, no requieren herramientas, y son completamente reutilizables.
 
 **Nota:** Muchas antenas comerciales de tipo quad no llevan choke y funcionan perfectamente. El quad tiene una geometría intrínsecamente bien equilibrada en el feedpoint. El choke es principalmente para obtener medidas fiables durante el ajuste, no un requisito para el uso normal.
+
+<p align="center">
+  <img src="images/pics/driven_element_solder.jpg" width="320" alt="Detalle de la soldadura del driven"/>
+  <img src="images/pics/driven_element.jpeg" width="320" alt="Driven element con coaxial y sellado"/>
+</p>
 
 ### 4.3. Procedimiento de ajuste
 
@@ -176,6 +222,11 @@ Todo cable real tiene Vf < 1. El cobre desnudo al aire está alrededor de 0.97 y
 Después de montar todos los elementos, puede ser necesario un retoque fino del driven element para centrar la frecuencia. Los directores raramente necesitan retoque si se cortaron correctamente.
 
 **Tip:** En el VNA, usa la vista de SWR vs frecuencia (no solo la carta de Smith) para ver claramente dónde está el mínimo y el ancho de banda.
+
+<p align="center">
+  <img src="images/pics/wire_clam_screw.jpg" width="320" alt="Abrazadera de hilo — lado del tornillo Allen"/>
+  <img src="images/pics/wire_clam_nut.jpg" width="320" alt="Abrazadera de hilo — lado de la tuerca"/>
+</p>
 
 ---
 
@@ -230,6 +281,10 @@ La antena documentada como ejemplo en esta guía (5 elementos, 435 MHz, cable PV
 
 > Para comparar con los valores teóricos esperados en otras configuraciones (2–7 elementos) y la equivalencia con Yagi, ver [TEORIA.es.md § 4](TEORIA.es.md).
 
+<p align="center">
+  <img src="images/pics/70cm_open_2.jpeg" width="520" alt="Vista 3/4 de la antena de 5 elementos para 435 MHz construida"/>
+</p>
+
 ---
 
 ## 7. Piezas pre-construidas
@@ -239,6 +294,11 @@ CI publica un conjunto pre-renderizado de STL para los tamaños de boom y spread
 Si ninguna de las combinaciones pre-renderizadas coincide con tu hardware, consulta el [§ 7.4](#74-construir-un-tamaño-personalizado) más abajo para renderizar la tuya.
 
 ### 7.1. Bloque todo-en-uno (collar del boom + 4 abrazaderas)
+
+<p align="center">
+  <img src="images/pics/aio_open.jpg" width="320" alt="Bloque all-in-one con las abrazaderas abiertas"/>
+  <img src="images/pics/aio_closed.jpg" width="320" alt="Bloque all-in-one con las abrazaderas cerradas contra el collar del boom"/>
+</p>
 
 Forma del boom × dimensión del boom en filas, diámetro del spreader en columnas.
 
