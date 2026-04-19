@@ -2,6 +2,10 @@
 
 Modular and foldable cubical quad antenna design for any HF/VHF/UHF band, built with 3D-printed parts, fiberglass spreaders and an aluminum boom.
 
+<p align="center">
+  <img src="web/diagram.jpeg" width="420" alt="OpenQuad design diagram"/>
+</p>
+
 ## 📖 Construction guide / Guía de construcción
 
 | Language | Build guide | Theory & formulas |
