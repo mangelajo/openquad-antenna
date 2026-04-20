@@ -69,7 +69,8 @@ NFQ_COMMON = -D 'freq=$(NFQ_FREQ)' -D 'vf=$(NFQ_VF)' -D 'num_directors=$(NFQ_DIR
 
 NFQ_STLS := $(BUILD)/nfq_x_reflector.stl $(BUILD)/nfq_x_driven.stl \
             $(BUILD)/nfq_x_dir1.stl $(BUILD)/nfq_x_dir2.stl \
-            $(BUILD)/nfq_boom_seg0.stl $(BUILD)/nfq_boom_seg1.stl
+            $(BUILD)/nfq_boom_seg0.stl $(BUILD)/nfq_boom_seg1.stl \
+            $(BUILD)/nfq_all.stl
 
 $(BUILD)/nfq_x_reflector.stl: src/non_foldable_quad.scad | $(BUILD)
 	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
@@ -100,6 +101,10 @@ $(BUILD)/nfq_boom_seg1.stl: src/non_foldable_quad.scad | $(BUILD)
 	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
 	  -D 'render_part="boom"' -D 'segment_index=1' \
 	  $(NFQ_COMMON) $<
+
+$(BUILD)/nfq_all.stl: src/non_foldable_quad.scad | $(BUILD)
+	$(OPENSCAD) $(OPENSCAD_FLAGS) -o $@ \
+	  -D 'render_part="all"' $(NFQ_COMMON) $<
 
 nfq: $(NFQ_STLS) ## Build the non-foldable quad STLs (override NFQ_FREQ/NFQ_VF/NFQ_DIRS)
 

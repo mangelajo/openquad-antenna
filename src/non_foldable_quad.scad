@@ -19,7 +19,7 @@
 // ============================================================
 
 /* [Render] */
-render_part    = "x";     // "x" or "boom" - dispatcher
+render_part    = "all";     // "x" or "boom" - dispatcher
 element_index  = 0;       // 0=reflector, 1=driven, 2..=director N (director N => index N+1)
 segment_index  = 0;       // 0 = reflector<->driven gap (0.20 lambda), >=1 = 0.15 lambda gaps
 driven_element = false;   // Driven X: central coax bore + 45 deg solder exits
@@ -27,30 +27,33 @@ driven_element = false;   // Driven X: central coax bore + 45 deg solder exits
 /* [Antenna] */
 freq          = 868.0;    // MHz
 vf            = 0.95;     // wire velocity factor
-num_directors = 5;        // total elements = 2 + num_directors
+num_directors = 2;        // total elements = 2 + num_directors
 
 /* [Mechanical] */
 boom_dia    = 8.0;        // Boom square side length; socket side = boom_dia + print_gap
 rod_side    = 8.0;        // Printed rod cross section (square, filleted)
 max_rod_len = 220;        // Assert guard against unprintable rods
+handle_len    = 80;      // Extra boom segment length to use as mast/handle
 
 // ============================================================
 // DESIGN CONSTANTS (hardware / printability, rarely changed)
 // ============================================================
 
 /* [Hidden] */
-print_gap     = 0.20;     // Press-fit clearance (matches all_in_one.scad)
+print_gap     = 0.01;     // Press-fit clearance (matches all_in_one.scad)
 hub_wall      = 3;        // Wall thickness around the boom socket
 // hub_height is derived below: it must be >= rod_side so the horizontal
 // rods attach to a full-height hub face (no support material needed).
 socket_depth  = 14;       // Boom-socket depth into hub / segment
-plug_len      = 12;       // Male plug length on boom segment
 rod_fillet    = 1.2;      // Rod edge rounding
+total_h = rod_side - 2 * rod_fillet;
+plug_len      = 12+total_h;       // Male plug length on boom segment
 wire_tip_hole = 1.6;      // Transverse through-hole at rod tip for wire tie
 feed_hole_d   = 5.0;      // Coax strain-relief bore (driven only)
 solder_slot_w = 2.2;      // Solder-exit slot width (driven only)
 solder_slot_h = 4.0;      // Solder-exit slot height (driven only)
 tip_inset     = 3.0;      // Distance from rod tip to wire-tie hole center
+
 
 /* [Hidden] */
 $fn = 80;
@@ -99,13 +102,39 @@ assert(
         "mm - use the foldable design for this band")
 );
 
-echo(str("freq=", freq, " MHz  lambda=", lambda, " mm  vf=", vf));
+echo(str("freq=", freq, " MHz  lambda=", lambda, " mm  vf=", vf,
+         "  num_directors=", num_directors));
 echo(str("k factors: ", k_vec));
-echo(str("element_index=", element_index,
+
+// Per-element dimensions (covers every X that "all" mode would print).
+for (i = [0 : 1 + num_directors]) {
+    _perim = k_vec[i] * lambda * vf;
+    _side  = _perim / 4;
+    _rod   = _side * sqrt(2) / 2;
+    _role  = (i == 0) ? "reflector"
+            : (i == 1) ? "driven"
+            : str("director", i - 1);
+    echo(str("element[", i, "] ", _role,
+             "  perim=", _perim, " mm  side=", _side,
+             " mm  rod_len=", _rod, " mm"));
+}
+
+// Per-segment dimensions (one per gap in "all" mode).
+for (i = [0 : len(spacings) - 1]) {
+    _gap = (i == 0) ? "reflector<->driven"
+         : (i == 1) ? "driven<->director1"
+                    : str("director", i - 1, "<->director", i);
+    echo(str("segment[", i, "] ", _gap,
+             "  seg_len=", spacings[i], " mm"));
+}
+echo(str("segment[handle] mast/handle  seg_len=", handle_len, " mm"));
+
+// Dispatcher-specific values (for "x" and "boom" render modes).
+echo(str("dispatcher element_index=", element_index,
          "  perim=", perim, " mm  side=", side_len,
          " mm  rod_len=", rod_len, " mm"));
-echo(str("segment_index=", segment_index, "  seg_len=", seg_len, " mm"));
-echo(str("all spacings (mm): ", spacings));
+echo(str("dispatcher segment_index=", segment_index,
+         "  seg_len=", seg_len, " mm"));
 
 // ============================================================
 // MODULES
@@ -243,6 +272,29 @@ module boom_segment(seg_len, boom_dia) {
 // ASSEMBLY (dispatch)
 // ============================================================
 
+// ---- Layout helpers for render_part="all" (full print plate) ----
+
+// X element rotated so the rod fan lies in the XY plane (flat on the bed).
+// Native X has boom axis along Y and rods in XZ; rotating -90 deg around X
+// sends the boom axis to Z (boom sticks up) and the rods into XY.
+module _x_lay_flat(rod_len, rod_side, boom_dia, hub_side, hub_height, driven) {
+    rotate([-90, 0, 0])
+        quad_x_element(
+            rod_len    = rod_len,
+            rod_side   = rod_side,
+            boom_dia   = boom_dia,
+            hub_side   = hub_side,
+            hub_height = hub_height,
+            driven     = driven
+        );
+}
+
+// Boom segment laid flat with its long axis along +X, starting at origin.
+module _boom_lay_flat(seg_len, boom_dia) {
+    rotate([0, 0, -90])
+        boom_segment(seg_len = seg_len, boom_dia = boom_dia);
+}
+
 if (render_part == "x") {
     quad_x_element(
         rod_len     = rod_len,
@@ -254,6 +306,59 @@ if (render_part == "x") {
     );
 } else if (render_part == "boom") {
     boom_segment(seg_len = seg_len, boom_dia = boom_dia);
+} else if (render_part == "all") {
+    // Lay every X element (one per element_index 0..total-1) and every
+    // boom segment (one per unique gap) flat on the print bed, spaced
+    // apart so nothing overlaps. X elements are spread along +X (row);
+    // boom segments go in a second row below (negative Y).
+
+    total_elems = 2 + num_directors;
+
+    // Rod-length per element (max = reflector/idx 0).
+    rod_len_of = function (idx)
+        (k_vec[idx] * lambda * vf / 4) * sqrt(2) / 2;
+    max_rod = rod_len_of(0);
+
+    // Each laid-flat X spans 2*rod_len + hub_side along both X and Y.
+    // Use the reflector's footprint for a uniform cell pitch.
+    gap    = 5;
+    cell   = 2 * max_rod + hub_side + gap;
+
+    // Interlocked pack: alternate X-elements' rotation by 45 deg so
+    // neighbors' rods slot into each other's empty corners. Pitch along
+    // +X shrinks from (2*rod_len + hub_side) to ~(rod_len + hub_side/2),
+    // roughly halving the print footprint.
+    pack_pitch = max_rod + hub_side / 2 + gap;
+    pack_y0    = max_rod + hub_side / 2;   // clearance from Y=0 edge
+    for (i = [0 : total_elems - 1]) {
+        rot = (i % 2 == 0) ? 0 : 45;
+        translate([pack_pitch / 2 + i * pack_pitch, pack_y0, 0])
+            rotate([0, 0, rot])
+                _x_lay_flat(
+                    rod_len    = rod_len_of(i),
+                    rod_side   = rod_side,
+                    boom_dia   = boom_dia,
+                    hub_side   = hub_side,
+                    hub_height = hub_height,
+                    driven     = (i == 1)
+                );
+    }
+
+    // Boom segments: laid flat below the interlocked row, long axis +X,
+    // stacked along -Y so longer segments don't collide with shorter ones.
+    // An extra segment of length handle_len is added at the end to serve
+    // as a mast/handle that plugs into the reflector's back socket.
+    num_segs     = len(spacings);
+    boom_pitch_y = boom_dia + 2 * hub_wall + gap;
+    booms_y0     = -(boom_dia + 2 * hub_wall) / 2 - gap;
+    for (i = [0 : num_segs - 1]) {
+        translate([0, booms_y0 - i * boom_pitch_y, 0])
+            _boom_lay_flat(seg_len = spacings[i]-total_h, boom_dia = boom_dia);
+    }
+    // Mast/handle segment.
+    translate([0, booms_y0 - num_segs * boom_pitch_y, 0])
+        _boom_lay_flat(seg_len = handle_len, boom_dia = boom_dia);
 } else {
-    assert(false, str("render_part must be \"x\" or \"boom\", got: ", render_part));
+    assert(false,
+        str("render_part must be \"x\", \"boom\", or \"all\", got: ", render_part));
 }
