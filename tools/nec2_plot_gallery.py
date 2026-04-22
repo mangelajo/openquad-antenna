@@ -194,7 +194,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "summary.swr":           "SWR @ 50Ω",
     },
     "ja": {
-        "pareto.title":          "利得 ↔ F/B のトレードオフ — 動作点の選択",
+        "pareto.title":          "利得 vs F/B のトレードオフ — 動作点の選択",
         "pareto.xlabel":         "F/B (dB)",
         "pareto.ylabel":         "利得 (dBi)",
         "pareto.cbar":           "k_reflector",
@@ -229,7 +229,7 @@ STRINGS: dict[str, dict[str, str]] = {
         "summary.swr":           "SWR @ 50Ω",
     },
     "zh": {
-        "pareto.title":          "增益 ↔ F/B 折中 — 选择工作点",
+        "pareto.title":          "增益 vs F/B 折中 — 选择工作点",
         "pareto.xlabel":         "F/B (dB)",
         "pareto.ylabel":         "增益 (dBi)",
         "pareto.cbar":           "k_reflector",

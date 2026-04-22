@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# OpenSCAD / build artefacts
+build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# NEC2 intermediate files (kept out; CSVs are the source of truth for the gallery)
+docs/images/gallery/data/*.nec
+docs/images/gallery/data/*.out
+tools/data/*.nec
+tools/data/*.out
+# Note: the CSVs under docs/images/gallery/data/*.csv ARE committed.

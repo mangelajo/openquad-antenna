@@ -572,6 +572,12 @@ def main() -> None:
     if args.full_data_dump:
         out_dir = Path(args.full_data_dump)
         out_dir.mkdir(parents=True, exist_ok=True)
+        # nec2c has a hard-coded 80-char limit on the input/output filename.
+        # macOS tempdirs (/var/folders/.../T/...) already eat ~60 chars, which
+        # leaves no room for the per-run .nec/.out files. Use the dump dir as
+        # the workdir (relative path, short) when the caller hasn't set one.
+        if workdir is None:
+            workdir = out_dir
         print(f"\nVolcando todos los análisis en {out_dir}/")
 
         # 1) Spacing sweep — ambas configs
