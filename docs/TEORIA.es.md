@@ -350,9 +350,30 @@ Sintoniza un repetidor o baliza conocida, apunta la antena hacia la fuente, anot
 
 ### Artículos online
 
-- **Artículos de Cebik sobre quads** (indexados por G0UIH): https://q82.uk/cebikquad
-- **"Why the old formula of 1005/freq sometimes doesn't work for loop antennas"** — Explicación del efecto del Vf en loops con cable PVC: https://q82.uk/1005overf
-- **W8JI — Cubical Quad** — Análisis técnico riguroso: https://www.w8ji.com/quad_cubical_quad.htm
+- **L. B. Cebik (W4RNL) — "Cubical Quad Notes" (3 volúmenes).** La referencia definitiva sobre
+  diseño de quads. Todos los volúmenes disponibles en PDF en:
+  https://antenna2.github.io/cebik/content/bookant.html
+- **L. B. Cebik (W4RNL) — "2-Element Quads as a Function of Wire Diameter"** — Metodología
+  de optimización NEC que fija el driven en resonancia y ajusta reflector para máximo F/B.
+  Documenta el compromiso ganancia↔F/B con datos NEC-4. https://antenna2.github.io/cebik/content/quad/q2l1.html
+- **L. B. Cebik (W4RNL) — "The Quad vs. Yagi Question"** — Análisis comparativo con sweeps
+  paramétricos. Confirma que los quads de 2 elementos no superan ~20 dB de F/B sin directores.
+  https://antenna2.github.io/cebik/content/quad/qyc.html
+- **Tom Rauch (W8JI) — "Cubical Quad Antenna"** — Análisis técnico riguroso con datos NEC.
+  Cita directa sobre el compromiso ganancia/F/B: *"if we optimize F/B ratio we can expect lower
+  gain from any parasitic array"*. https://www.w8ji.com/quad_cubical_quad.htm
+- **"Why the old formula of 1005/freq sometimes doesn't work for loop antennas"** — Efecto del
+  Vf en loops con cable PVC. https://q82.uk/1005overf
+- **Electronics Notes — "Yagi Feed Impedance & Matching"** — Explica el efecto del acoplamiento
+  mutuo sobre la impedancia del feedpoint: *"altering the element spacing has a greater effect
+  on the impedance than it does the gain"*. https://www.electronics-notes.com/articles/antennas-propagation/yagi-uda-antenna-aerial/feed-impedance-matching.php
+- **Wikipedia — "Yagi–Uda antenna" (sección Mutual impedance)** — Formulación matemática del
+  acoplamiento Z_ij entre driven y parásitos. Clave para entender por qué alargar el reflector
+  DESPLAZA la frecuencia de resonancia del feedpoint (hacia arriba, no hacia abajo).
+  https://en.wikipedia.org/wiki/Yagi%E2%80%93Uda_antenna
+- **KD2BD (John Magliacane) — "Thoughts on Perfect Impedance Matching of a Yagi"** — Matching
+  de feedpoints con reactancia no nula. Útil tras optimizar el reflector para F/B, cuando Z_in
+  deja de ser 50 Ω. https://www.qsl.net/kd2bd/impedance_matching.html
 - **Practical Antennas — Wire Quads:** https://practicalantennas.com/designs/loops/wirequad/
 - **Electronics Notes — Cubical Quad Antenna:** https://www.electronics-notes.com/articles/antennas-propagation/cubical-quad-antenna/quad-basics.php
 
@@ -364,8 +385,25 @@ Sintoniza un repetidor o baliza conocida, apunta la antena hacia la fuente, anot
 
 ### Calculadores online
 
-- **YT1VP Cubical Quad Calculator:** https://www.qsl.net/yt1vp/CUBICAL%20QUAD%20ANTENNA%20CALCULATOR.htm (no tiene corrección de Vf)
+- **YT1VP Cubical Quad Calculator:** https://www.qsl.net/yt1vp/CUBICAL%20QUAD%20ANTENNA%20CALCULATOR.htm
+  Usa espaciado R→DE ≈ 0.186 λ (constante `730 ft·MHz`) y directores ≈ 0.153 λ (constante
+  `600 ft·MHz`). Ver §1.6 para la comparación con el valor 0.200 λ usado por OpenQuad.
 - **CSGNetwork Cubical Quad Calculator:** http://www.csgnetwork.com/antennae5q2calc.html
+
+### Libros recomendados (papel)
+
+- **James L. Lawson (W2PV) — "Yagi Antenna Design"** (ARRL, 1986, ISBN 0-87259-041-0).
+  Referencia clásica sobre optimización computacional de arrays parasíticos. La metodología
+  de barrido paramétrico (variar k_refl manteniendo driven fijo) que usa OpenQuad viene
+  directamente de esta obra.
+- **William I. Orr (W6SAI) — "All About Cubical Quad Antennas"** (Radio Publications, 1959
+  y ediciones posteriores). Origen histórico de las constantes empíricas `730/f` y `600/f`
+  para espaciados; clásico absoluto del mundo quad.
+- **David B. Leeson — "Physical Design of Yagi Antennas"** (ARRL, 1992, ISBN 0-87259-381-9).
+  Complementa a Lawson con el diseño mecánico y métodos de matching. Cebik lo recomienda como
+  *companion book* para entender arrays parasíticos en profundidad.
+- **ARRL Antenna Book** (edición actual, ARRL). El capítulo dedicado a quads recoge las
+  fórmulas clásicas 1005/1030/975 y el rango de espaciados 0.14–0.25 λ.
 
 ### Normas citadas
 
