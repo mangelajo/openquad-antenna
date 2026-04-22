@@ -411,4 +411,173 @@ Sintoniza un repetidor o baliza conocida, apunta la antena hacia la fuente, anot
 
 ---
 
+## 6. Análisis NEC2 del espaciado entre elementos
+
+### 6.1. Herramienta requerida
+
+Los análisis de este documento se realizaron con **nec2c**, implementación libre de NEC-2
+(Numerical Electromagnetics Code). Instalación en Debian/Ubuntu:
+
+```bash
+sudo apt-get install nec2c
+```
+
+En macOS con Homebrew:
+
+```bash
+brew install nec2c
+```
+
+### 6.2. Script de análisis: `tools/nec2_spacing_analysis.py`
+
+El script genera ficheros de entrada NEC2, ejecuta las simulaciones y produce gráficas
+comparativas. Soporta tres modos de análisis:
+
+```bash
+# MODO 1 — Sweep de k_refl para dos configuraciones de espaciado (análisis de §1.6)
+python3 tools/nec2_spacing_analysis.py --freq 435 --elements 5
+
+# MODO 2 — Análisis del ajuste del reflector: ganancia + F/B + Z_in (datos de §1.7)
+python3 tools/nec2_spacing_analysis.py --freq 435 --elements 5 --reflector-tuning
+
+# MODO 3 — Barrido de impedancia vs frecuencia (Z_in, SWR, resonancia del feedpoint)
+python3 tools/nec2_spacing_analysis.py --freq 435 --elements 5 --impedance-sweep
+
+# Solo una configuración personalizada
+python3 tools/nec2_spacing_analysis.py --freq 435 --elements 5 \
+        --spacing-r-de 0.200 --spacing-dir 0.150
+
+# Guardar resultados en CSV
+python3 tools/nec2_spacing_analysis.py --freq 435 --elements 5 --csv resultados.csv
+```
+
+El modo `--reflector-tuning` reproduce la tabla de §1.7 de TEORIA (k=1.047, 1.068, 1.090, 1.110
+con ganancia, F/B, R, X y SWR). Usa la carta `PT -1` de NEC2 para leer la corriente del segmento
+de feed y calcular Z_in = R + jX directamente.
+
+El modo `--impedance-sweep` barre la frecuencia ±15 MHz alrededor de la frecuencia objetivo,
+mostrando cómo la resonancia eléctrica del feedpoint (donde X=0) se desplaza hacia arriba al
+alargar el reflector — fenómeno documentado en §1.7.
+
+### 6.3. Cómo funciona el modelo NEC2 para una quad
+
+La MOQUAD monta los loops **girados 45° (orientación en diamante)**, con los brazos spreader
+apuntando a N/S/E/W y el cable uniendo sus puntas. El modelo NEC2 refleja esta geometría real.
+
+Cada elemento loop se modela como **4 conductores rectos formando un diamante** en el plano YZ.
+El boom va a lo largo del eje X. Los cuatro vértices están en las posiciones cardinales:
+
+```
+              N (0, +r)
+             / \
+            /   \
+W (-r, 0) ●       ● E (+r, 0)
+            \   /
+             \ /
+              S (0, -r)  ← feedpoint del driven
+         +z
+         |
+    ─────●───── +y    r = lado × √2 / 2  (radio = distancia centro→vértice)
+```
+
+El feedpoint se sitúa en el **vértice S (inferior)**, que es el punto de alimentación natural
+para **polarización horizontal**. La razón:
+
+- Desde S, los conductores W→S y S→E llegan/salen a ±45°.
+- Sus componentes horizontales (±Y) **suman** en S → corriente neta horizontal.
+- Sus componentes verticales (±Z) **se cancelan** en S → sin contaminación de pol. V.
+
+El feed se implementa en el **último segmento del conductor W→S** (el más cercano al vértice S).
+Cuantos más segmentos por lado, más cerca queda el gap del vértice y mejor el XPD. Con SEG=19
+el gap queda a ~4 mm del vértice y el XPD ≥ 27 dB. Con SEG=99 el XPD supera 38 dB.
+
+Wires en orden horario (vistos desde el frente, +X):
+
+```
+W1:  S → E   (conductor inferior-derecho)   ← dirección (+y, +z)/√2
+W2:  E → N   (conductor superior-derecho)   ← dirección (-y, +z)/√2
+W3:  N → W   (conductor superior-izquierdo) ← dirección (-y, -z)/√2
+W4:  W → S   (conductor inferior-izquierdo) ← dirección (+y, -z)/√2  ← FEED aquí
+```
+
+Extracto del formato de carta GW de NEC2:
+
+```
+GW  tag  nseg  x1  y1  z1  x2  y2  z2  radio
+```
+
+Ejemplo para el driven element en x=0.1378 m, lado s=0.1760 m (r=0.1244 m), radio=0.0005 m,
+SEG=19:
+
+```
+GW  5  19  0.1378   0.0000  -0.1244  0.1378  +0.1244   0.0000  0.0005   ← W1: S→E
+GW  6  19  0.1378  +0.1244   0.0000  0.1378   0.0000  +0.1244  0.0005   ← W2: E→N
+GW  7  19  0.1378   0.0000  +0.1244  0.1378  -0.1244   0.0000  0.0005   ← W3: N→W
+GW  8  19  0.1378  -0.1244   0.0000  0.1378   0.0000  -0.1244  0.0005   ← W4: W→S (FEED)
+```
+
+La excitación se aplica en el **último segmento** del conductor W4 (W→S), el más próximo al
+vértice S:
+
+```
+EX  0  8  19  0  1  0     ← tag=8 (W4 del driven), seg=19 (último), tensión unitaria
+```
+
+El patrón de radiación horizontal se obtiene con:
+
+```
+RP  0  1  361  1000  90  0  1  1       ← theta=90°, phi=0..360°, 1°/paso
+```
+
+### 6.4. Interpretación de las columnas del fichero .out
+
+La sección `RADIATION PATTERNS` del fichero de salida tiene este formato:
+
+```
+  THETA    PHI    VERTC    HORIZ    TOTAL    AXIAL   TILT  SENSE  ...
+ DEGREES  DEGREES   DB       DB       DB     RATIO  DEGREES
+```
+
+- **VERTC** (col 3): ganancia polarización vertical (dBi)
+- **HORIZ** (col 4): ganancia polarización horizontal (dBi)
+- **TOTAL** (col 5): ganancia total (dBi) — **esta es la columna principal**
+
+Para la MOQUAD en diamante con feed en S, HORIZ ≈ TOTAL y VERTC queda ≥ 27 dB por debajo
+(XPD ≥ 27 dB con SEG=19). Leer TOTAL para los análisis de ganancia y F/B es correcto.
+
+```python
+# Lectura básica del patrón en Python
+gains = {}
+with open("simulacion.out") as f:
+    for line in f:
+        parts = line.split()
+        try:
+            theta, phi = float(parts[0]), float(parts[1])
+            if abs(theta - 90.0) < 0.1:
+                gains[round(phi)] = float(parts[4])   # col TOTAL
+        except (ValueError, IndexError):
+            pass
+
+gain_forward = gains.get(0, gains.get(360))   # phi=0° = dirección de los directores (+X)
+gain_back    = gains.get(180)                  # phi=180° = dirección del reflector
+fb_ratio     = gain_forward - gain_back        # F/B en dB
+```
+
+### 6.5. Validación del modelo
+
+Para validar que el modelo diamante es correcto antes de hacer el sweep:
+
+1. Simula solo el driven element (sin parásitos). La impedancia de entrada debe ser **~100 Ω
+   resistiva** (loop cuadrado de onda completa → 100–125 Ω; la orientación 45° no cambia este valor).
+2. Verifica la polarización: VERTC debe quedar ≥ 25 dB por debajo de HORIZ en phi=0°. Si la
+   diferencia es menor, el feedpoint está demasiado lejos del vértice → aumentar SEG.
+3. Añade el reflector. La ganancia debe subir ~5 dBi respecto al dipolo isótropo y el F/B
+   debe ser ≥ 10 dB.
+4. Comprueba que el pico de ganancia apunta hacia los directores (phi=0° en el modelo, hacia +X).
+5. **Nota sobre la ganancia:** La orientación en diamante da ~0.2 dBi menos que la orientación
+   cuadrada con side-feed, por la diferente proyección de la corriente en el plano de radiación.
+   Esto es un efecto físico real, no un artefacto del modelo.
+
+---
+
 *73 de EA4IPW — OpenQuad v1.0*
