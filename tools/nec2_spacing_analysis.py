@@ -433,6 +433,35 @@ def save_csv(path: str, results: dict[str, list[tuple[float, float, float]]]) ->
     print(f"\nResultados guardados en {path}")
 
 
+def save_reflector_tuning_csv(path: str, results: list[dict]) -> None:
+    """Guarda resultados de reflector_tuning_sweep en CSV."""
+    with open(path, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["k_refl", "perim_mm", "gain_dBi", "fb_dB",
+                    "R_ohm", "X_ohm", "swr_50"])
+        for r in results:
+            w.writerow([r["k_refl"], round(r["perim_mm"], 1),
+                        round(r["gain"], 2) if r["gain"] is not None else "",
+                        round(r["fb"], 1)   if r["fb"]   is not None else "",
+                        round(r["R"], 2)    if r["R"]    is not None else "",
+                        round(r["X"], 2)    if r["X"]    is not None else "",
+                        round(r["swr"], 3)  if r["swr"]  is not None else ""])
+    print(f"\nDatos guardados en {path}")
+
+
+def save_impedance_sweep_csv(path: str,
+                             all_rows: dict[float, list[tuple]]) -> None:
+    """Guarda barrido de impedancia vs frecuencia."""
+    with open(path, "w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["k_refl", "freq_mhz", "R_ohm", "X_ohm", "swr_50"])
+        for k_refl, rows in all_rows.items():
+            for (freq, R, X, swr) in rows:
+                w.writerow([k_refl, freq, round(R, 2),
+                            round(X, 2), round(swr, 3)])
+    print(f"\nDatos guardados en {path}")
+
+
 def plot_results(results: dict[str, list[tuple[float, float, float]]],
                  freq_mhz: float, out_png: str = "quad_spacing_analysis.png") -> None:
     if not HAS_MATPLOTLIB:
@@ -528,6 +557,9 @@ def main() -> None:
     ap.add_argument("--impedance-sweep", action="store_true",
                     help="Barrido de impedancia vs frecuencia para varios k_refl. "
                          "Genera tabla de Z_in y SWR (para sección §1.7 de TEORIA).")
+    ap.add_argument("--full-data-dump", type=str, default=None,
+                    help="Directorio donde volcar CSVs completos de todos los análisis "
+                         "(para alimentar tools/nec2_plot_gallery.py).")
     args = ap.parse_args()
 
     num_directors = args.elements - 2
@@ -535,6 +567,74 @@ def main() -> None:
         ap.error("--elements debe ser ≥ 2 (reflector + driven)")
 
     workdir = Path(args.workdir) if args.workdir else None
+
+    # ── Modo --full-data-dump: volcar todos los CSV para la galería ──
+    if args.full_data_dump:
+        out_dir = Path(args.full_data_dump)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        print(f"\nVolcando todos los análisis en {out_dir}/")
+
+        # 1) Spacing sweep — ambas configs
+        spacing_results: dict[str, list[tuple[float, float, float]]] = {}
+        for name, cfg in SPACINGS.items():
+            print(f"  Spacing sweep: {cfg['label']}")
+            rows = sweep(freq_mhz=args.freq, num_directors=num_directors,
+                         r_de_frac=cfg["r_de"], dir_frac=cfg["dir"],
+                         k_refl_range=(args.k_start, args.k_end, args.k_step),
+                         workdir=workdir)
+            spacing_results[name] = rows
+        save_csv(str(out_dir / "spacing_sweep.csv"), spacing_results)
+
+        # 2) Reflector tuning detallado (paso 0.002 entre 1.020 y 1.120)
+        print("  Reflector tuning sweep (detallado)...")
+        k_values = [round(1.020 + 0.002 * i, 4) for i in range(51)]
+        tune_results = reflector_tuning_sweep(
+            freq=args.freq, num_directors=num_directors,
+            r_de_frac=SPACINGS["openquad"]["r_de"],
+            dir_frac=SPACINGS["openquad"]["dir"],
+            k_refl_values=k_values, workdir=workdir,
+        )
+        save_reflector_tuning_csv(str(out_dir / "reflector_tuning.csv"),
+                                  tune_results)
+
+        # 3) Impedance sweep para 4 valores representativos de k_refl
+        print("  Impedance sweep vs frecuencia...")
+        imp_data: dict[float, list[tuple[float, float, float, float]]] = {}
+        for k_refl in [1.047, 1.068, 1.090, 1.110]:
+            rows_imp = impedance_sweep(
+                freq_target=args.freq, num_directors=num_directors,
+                r_de_frac=SPACINGS["openquad"]["r_de"],
+                dir_frac=SPACINGS["openquad"]["dir"],
+                k_refl=k_refl,
+                freq_range=(args.freq - 20, args.freq + 20, 0.5),
+                workdir=workdir,
+            )
+            imp_data[k_refl] = rows_imp
+        save_impedance_sweep_csv(str(out_dir / "impedance_sweep.csv"), imp_data)
+
+        # 4) Patrón de radiación completo para k_refl nominal y optimizados
+        print("  Patrones de radiación full...")
+        patterns: dict[float, dict[int, float]] = {}
+        pat_dir = workdir if workdir else Path(tempfile.mkdtemp(prefix="quad_pat_"))
+        for k_refl in [1.047, 1.068, 1.110]:
+            nec = pat_dir / f"pattern_k{int(k_refl*1000)}.nec"
+            write_nec_file(nec, args.freq, k_refl, num_directors,
+                           SPACINGS["openquad"]["r_de"],
+                           SPACINGS["openquad"]["dir"])
+            out = run_nec2(nec)
+            patterns[k_refl] = parse_azimuth_pattern(out)
+
+        with open(out_dir / "patterns.csv", "w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["k_refl", "phi_deg", "gain_dBi"])
+            for k_refl, gains in patterns.items():
+                for phi in sorted(gains.keys()):
+                    w.writerow([k_refl, phi, round(gains[phi], 2)])
+        print(f"  Patrones guardados en {out_dir}/patterns.csv")
+
+        print(f"\n✓ Volcado completo. Ejecuta: "
+              f"python3 tools/nec2_plot_gallery.py {out_dir}")
+        return
 
     # ── Modos especiales: análisis de reflector (§1.7 de TEORIA) ──
     if args.reflector_tuning:
