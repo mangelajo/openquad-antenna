@@ -122,6 +122,8 @@ O script NEC2 que gera esta análise encontra-se em `tools/nec2_spacing_analysis
 > Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm);
 > W6SAI *All About Cubical Quad Antennas*, pp. 44–52.
 
+![Como escolher o ponto de operação no compromisso ganho↔F/B](images/gallery/pt/02_pareto_decision.png)
+
 ### 1.6. Afinação fina do refletor: o compromisso ganho ↔ F/B
 
 Os valores nominais da calculadora (k_refletor = 1.047, ou seja 2.5% mais longo que o driven)
@@ -212,6 +214,10 @@ Para aproveitar o compromisso e levar a antena ao ponto ótimo:
 Estes valores são para 5 elementos. Para 2 ou 3 elementos as diferenças são mais marcadas
 e o compromisso é mais duro — ver Cebik, *Cubical Quad Notes* Vol. 1 cap. 3 para a análise
 completa.
+
+![Diagrama polar comparando k=1.047, 1.068 e 1.110](images/gallery/pt/03_polar_pattern.png)
+
+![Cartões resumo das 4 configurações documentadas](images/gallery/pt/08_design_summary.png)
 
 ---
 
@@ -548,6 +554,8 @@ gain_forward = gains.get(0, gains.get(360))   # phi=0° = direção dos diretore
 gain_back    = gains.get(180)                  # phi=180° = direção do refletor
 fb_ratio     = gain_forward - gain_back        # F/B em dB
 ```
+
+![SWR@50Ω vs frequência para vários k_refl](images/gallery/pt/06_swr_bandwidth.png)
 
 ### 6.5. Validação do modelo
 

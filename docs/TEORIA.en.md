@@ -121,6 +121,8 @@ The NEC2 script that generates this analysis lives in `tools/nec2_spacing_analys
 > Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm);
 > W6SAI *All About Cubical Quad Antennas*, pp. 44–52.
 
+![How to choose the operating point on the gain↔F/B tradeoff](images/gallery/en/02_pareto_decision.png)
+
 ### 1.6. Fine-tuning the reflector: the gain ↔ F/B tradeoff
 
 The nominal calculator values (k_reflector = 1.047, i.e. 2.5% longer than the driven) are
@@ -209,6 +211,10 @@ To exploit the tradeoff and push the antenna to its optimum:
 
 These values are for 5 elements. For 2 or 3 elements the differences are sharper and the
 tradeoff is harsher — see Cebik, *Cubical Quad Notes* Vol. 1 ch. 3 for the full analysis.
+
+![Polar pattern comparing k=1.047, 1.068 and 1.110](images/gallery/en/03_polar_pattern.png)
+
+![Summary cards for the four documented configurations](images/gallery/en/08_design_summary.png)
 
 ---
 
@@ -545,6 +551,8 @@ gain_forward = gains.get(0, gains.get(360))   # phi=0° = director direction (+X
 gain_back    = gains.get(180)                 # phi=180° = reflector direction
 fb_ratio     = gain_forward - gain_back       # F/B in dB
 ```
+
+![SWR@50Ω vs frequency for several k_refl](images/gallery/en/06_swr_bandwidth.png)
 
 ### 6.5. Model validation
 

@@ -115,6 +115,8 @@ EME、方向固定的比赛），使用 0.186 λ；如果目标是在 F/B 足够
 > Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm)；
 > W6SAI *All About Cubical Quad Antennas*，第 44–52 页。
 
+![在增益 vs F/B 折中上选择工作点](images/gallery/zh/02_pareto_decision.png)
+
 ### 1.6. 反射器的精细调整：增益 ↔ F/B 折中
 
 计算器的标称值（k_reflector = 1.047，即比驱动单元长 2.5%）是合理的起点，但**并非最优**。
@@ -195,6 +197,10 @@ gamma match、L match 或 hairpin 来处理。
 
 这些数值适用于 5 元件配置。对于 2 或 3 元件，差异更为显著，折中也更为严苛 —— 完整分析
 请参阅 Cebik *Cubical Quad Notes* 第 1 卷第 3 章。
+
+![k=1.047、1.068、1.110 的极坐标方向图对比](images/gallery/zh/03_polar_pattern.png)
+
+![四种已记录配置的汇总卡片](images/gallery/zh/08_design_summary.png)
 
 ---
 
@@ -520,6 +526,8 @@ gain_forward = gains.get(0, gains.get(360))   # phi=0° = 引向器方向 (+X)
 gain_back    = gains.get(180)                  # phi=180° = 反射器方向
 fb_ratio     = gain_forward - gain_back        # F/B (dB)
 ```
+
+![不同 k_refl 下的 SWR@50Ω vs 频率](images/gallery/zh/06_swr_bandwidth.png)
 
 ### 6.5. 模型验证
 

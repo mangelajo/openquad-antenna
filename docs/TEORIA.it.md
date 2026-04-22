@@ -123,6 +123,8 @@ Lo script NEC2 che genera questa analisi si trova in `tools/nec2_spacing_analysi
 > Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm);
 > W6SAI *All About Cubical Quad Antennas*, pagg. 44–52.
 
+![Come scegliere il punto operativo sul compromesso guadagno↔F/B](images/gallery/it/02_pareto_decision.png)
+
 ### 1.6. Regolazione fine del riflettore: il compromesso guadagno ↔ F/B
 
 I valori nominali del calcolatore (k_riflettore = 1.047, cioè 2.5% più lungo del driven)
@@ -214,6 +216,10 @@ Per sfruttare il compromesso e portare l'antenna al punto ottimo:
 Questi valori valgono per 5 elementi. Per 2 o 3 elementi le differenze sono più marcate e
 il compromesso è più duro — vedi Cebik, *Cubical Quad Notes* Vol. 1 cap. 3 per l'analisi
 completa.
+
+![Diagramma polare a confronto per k=1.047, 1.068 e 1.110](images/gallery/it/03_polar_pattern.png)
+
+![Schede riassuntive delle 4 configurazioni documentate](images/gallery/it/08_design_summary.png)
 
 ---
 
@@ -551,6 +557,8 @@ gain_forward = gains.get(0, gains.get(360))   # phi=0° = direzione dei direttor
 gain_back    = gains.get(180)                  # phi=180° = direzione del riflettore
 fb_ratio     = gain_forward - gain_back        # F/B in dB
 ```
+
+![SWR@50Ω vs frequenza per vari k_refl](images/gallery/it/06_swr_bandwidth.png)
 
 ### 6.5. Validazione del modello
 
