@@ -140,6 +140,94 @@ El script NEC2 que genera este análisis se encuentra en `tools/nec2_spacing_ana
 > Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm);
 > W6SAI *All About Cubical Quad Antennas*, págs. 44–52.
 
+### 1.7. Ajuste fino del reflector: el compromiso ganancia ↔ F/B
+
+Los valores nominales de la calculadora (k_reflector = 1.047, es decir 2.5% más largo que el
+driven) son un punto de partida razonable, pero **no el óptimo**. En cualquier array parasítico
+existe un compromiso fundamental: el reflector se puede sintonizar para **máxima ganancia
+adelante** o para **máxima cancelación trasera (F/B)**, pero los dos óptimos no coinciden.
+
+#### Resultado del barrido NEC2 (5 elementos, 435 MHz, geometría diamante)
+
+| k_refl | Perímetro reflector | Ganancia adelante | Ganancia atrás | F/B |
+|---|---|---|---|---|
+| 1.047 (nominal) | 722 mm | 9.94 dBi | +2.54 dBi | 7.4 dB |
+| 1.068 (max gain) | 736 mm | **10.28 dBi** | −1.92 dBi | 12.2 dB |
+| 1.090 (compromise) | 751 mm | 10.16 dBi | −9.74 dBi | 19.9 dB |
+| 1.110 (max F/B) | 765 mm | 9.91 dBi | **−28.2 dBi** | **38.1 dB** |
+
+Observación clave: **la ganancia adelante apenas cambia** (rango de 0.37 dB en todo el barrido),
+mientras que la ganancia atrás se desploma **30 dB** al pasar del reflector nominal al optimizado
+para F/B. El F/B no se gana aumentando la radiación frontal, sino cancelando la trasera.
+
+#### Desmitificación: "dBi de ganancia" es el pico del patrón
+
+`dBi` mide la ganancia en la dirección de **máxima radiación** (pico del patrón), no una media
+ni la ganancia en una dirección fija. En una quad bien orientada ese pico coincide con la
+dirección de los directores (phi=0°), pero si el array está mal ajustado el pico puede desviarse
+hacia los lados. En este análisis siempre informamos ganancia en phi=0° (adelante), que coincide
+con el pico en todas las configuraciones del sweep.
+
+#### La resonancia del feedpoint se desplaza — pero hacia ARRIBA
+
+Un malentendido habitual: "si alargo el reflector, bajo la frecuencia de resonancia". La
+realidad es la contraria en un array parasítico:
+
+| k_refl | Z a 435 MHz | f_res del feedpoint (X=0) | SWR @ 50Ω @ 435 MHz |
+|---|---|---|---|
+| 1.047 | 45 − j39 Ω | 444 MHz (+9) | 2.24 |
+| 1.068 | 60 − j33 Ω | 445 MHz (+10) | 1.86 |
+| 1.090 | 75 − j37 Ω | 446 MHz (+11) | 2.04 |
+| 1.110 | 84 − j45 Ω | 447 MHz (+12) | 2.33 |
+
+El driven no cambia — siempre resuena cerca de 435 MHz por sí solo. Lo que cambia es el
+**acoplamiento mutuo** entre reflector y driven. La matriz de impedancias es:
+
+    Z_in = Z_11 − Z_12² / Z_22
+
+donde Z_11 es la impedancia propia del driven, Z_22 la del reflector, y Z_12 la mutua. Al alargar
+el reflector, Z_22 se vuelve más inductiva, lo que modifica el término Z_12²/Z_22 de forma que
+la reactancia que se suma al driven es **capacitiva**. Esto desplaza la frecuencia donde X=0
+hacia arriba, no hacia abajo.
+
+En la práctica, a 435 MHz el feedpoint siempre queda con reactancia capacitiva moderada
+(X ≈ −35 a −45 Ω), manejable con un gamma match, L-match, o un hairpin.
+
+#### Procedimiento de ajuste iterativo
+
+Para aprovechar el compromiso y llevar la antena al punto óptimo:
+
+1. **Construir** reflector, driven y directores con las dimensiones nominales de la calculadora
+   (k_refl = 1.047), añadiendo 15–20 mm extra al perímetro del reflector como margen de ajuste.
+
+2. **Medir** el F/B apuntando a una baliza conocida, o midiendo con VNA la impedancia y la
+   resonancia.
+
+3. **Alargar el reflector en pasos de ~5 mm** (añadiendo cable o con un stub ajustable),
+   anotando F/B tras cada paso. El F/B subirá progresivamente.
+
+4. **Detenerse** cuando F/B empiece a bajar o se vuelva inestable — has pasado el punto óptimo.
+   Retrocede medio paso.
+
+5. **Reajustar el matching** (gamma/L/hairpin) tras fijar la longitud del reflector, porque la
+   reactancia del feedpoint habrá cambiado respecto al punto inicial.
+
+> **Nota operativa:** el reflector SIEMPRE se ajusta alargándolo desde el valor nominal. Por eso
+> es más sensato construir con margen extra y recortar si te pasas, que quedarte corto y tener
+> que añadir cable.
+
+#### Compromisos típicos recomendados
+
+- **Aplicaciones de largo alcance / DX**: k_refl ≈ 1.068 (736 mm @ 435 MHz) — maximiza ganancia,
+  F/B razonable de ~12 dB.
+- **Recepción de baliza con interferencias traseras / rechazo de intermodulación**: k_refl ≈ 1.090
+  (751 mm) — pierdes 0.1 dB de ganancia, ganas 7.7 dB de F/B.
+- **EME, satélite, contests con dirección fija**: k_refl ≈ 1.108 (764 mm) — máximo F/B de 38 dB,
+  ganancia casi idéntica al nominal.
+
+Estos valores son para 5 elementos. Para 2 o 3 elementos las diferencias son más marcadas y el
+compromiso es más duro — ver Cebik, *Cubical Quad Notes* Vol. 1 cap. 3 para el análisis completo.
+
 ---
 
 ## 2. El Velocity Factor (Vf): por qué importa y cómo calcularlo
