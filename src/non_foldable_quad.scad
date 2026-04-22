@@ -53,6 +53,9 @@ feed_hole_d   = 5.0;      // Coax strain-relief bore (driven only)
 solder_slot_w = 2.2;      // Solder-exit slot width (driven only)
 solder_slot_h = 4.0;      // Solder-exit slot height (driven only)
 tip_inset     = 3.0;      // Distance from rod tip to wire-tie hole center
+label_depth   = 0.6;      // How deep to emboss the element label into the hub top
+label_size    = 4.0;      // Label text height (mm)
+endcap_len    = 20;       // End-cap boom total length (closed tail past last X)
 
 
 /* [Hidden] */
@@ -128,6 +131,7 @@ for (i = [0 : len(spacings) - 1]) {
              "  seg_len=", spacings[i], " mm"));
 }
 echo(str("segment[handle] mast/handle  seg_len=", handle_len, " mm"));
+echo(str("segment[endcap] front cap    cap_len=", endcap_len, " mm"));
 
 // Dispatcher-specific values (for "x" and "boom" render modes).
 echo(str("dispatcher element_index=", element_index,
@@ -155,7 +159,7 @@ module _rod(rod_len, rod_side, fillet_r) {
         }
 }
 
-module _rod_with_tip_hole(rod_len, rod_side, fillet_r, tip_hole_d, tip_inset) {
+module _rod_with_tip_hole(rod_len, rod_side, fillet_r, tip_hole_d, tip_inset, driven_hole) {
     // Straight through-hole at the tip, perpendicular to the rod axis
     // and lying in the plane of the four spreaders (XZ plane for the +X
     // rod). The wire enters from the neighbor on one side, exits toward
@@ -164,11 +168,28 @@ module _rod_with_tip_hole(rod_len, rod_side, fillet_r, tip_hole_d, tip_inset) {
     difference() {
         _rod(rod_len, rod_side, fillet_r);
         translate([rod_len - tip_inset, 0, 0])
-            cylinder(
-                d = tip_hole_d,
-                h = rod_side * 3,
-                center = true
-            );
+            if (driven_hole) {
+                 translate([-rod_side/2,+rod_side/2,rod_side/8])
+                 rotate([45,45,0])
+                 cylinder(
+                    d = tip_hole_d*1.5,
+                    h = rod_side * 3,
+                    center = true
+                );
+                translate([-rod_side/2,+rod_side/2,-rod_side/8])
+                 rotate([45,45+90,0])
+                 cylinder(
+                    d = tip_hole_d*1.5,
+                    h = rod_side * 3,
+                    center = true
+                );
+            } else {
+                cylinder(
+                    d = tip_hole_d,
+                    h = rod_side * 3,
+                    center = true
+                );
+            }
     }
 }
 
@@ -216,8 +237,11 @@ module _driven_features(hub_side, hub_height, feed_hole_d, solder_w, solder_h) {
 // Axes:
 //   +/-Y : boom axis (through-socket here)
 //   +/-X, +/-Z : four rod directions (square/aligned orientation)
+//
+// label: optional short string embossed on the +Z face of the hub (e.g.
+// "R", "D", "1", "2") for identification. Empty string disables it.
 module quad_x_element(
-    rod_len, rod_side, boom_dia, hub_side, hub_height, driven
+    rod_len, rod_side, boom_dia, hub_side, hub_height, driven, label = ""
 ) {
     difference() {
         union() {
@@ -225,20 +249,70 @@ module quad_x_element(
             // 4 rods at 0/90/180/270 deg around the boom axis (Y).
             // Rotation is around +Y so rods spread in the XZ plane.
             for (a = [0, 90, 180, 270]) {
-                rotate([0, a, 0])
-                    _rod_with_tip_hole(
-                        rod_len, rod_side, rod_fillet,
-                        wire_tip_hole, tip_inset
-                    );
+                let (driven_hole = (driven && (a == 0)))
+                    rotate([0, a, 0])
+                        _rod_with_tip_hole(
+                            rod_len, rod_side, rod_fillet,
+                            wire_tip_hole, tip_inset, driven_hole
+                        );
             }
         }
         _hub_boom_socket(boom_dia, print_gap, hub_side);
+    }
+}
 
-        if (driven) {
-            _driven_features(
-                hub_side, hub_height, feed_hole_d,
-                solder_slot_w, solder_slot_h
-            );
+// boom_endcap - closed tail with a socket (blind hole) on the -Y side.
+// Slides over the last boom segment's plug that sticks out past the
+// final X hub, sealing the front of the antenna. Label embossed on the
+// top (+Z) face near the socket end. The four edges around the closed
+// (+Y) end are chamfered for a cleaner finish.
+module boom_endcap(cap_len, boom_dia, label = "") {
+    od    = boom_dia + 2 * hub_wall;
+    soc   = boom_dia + print_gap;
+    chamf = hub_wall * 0.6;       // 45 deg chamfer depth on the tip edges
+
+    difference() {
+        // Solid closed body spanning Y=0 .. Y=cap_len.
+        translate([-od/2, 0, -od/2])
+            cube([od, cap_len, od]);
+
+        // Blind socket on the -Y end, depth = socket_depth.
+        translate([-soc/2, 0, -soc/2])
+            cube([soc, socket_depth, soc]);
+
+        // 45 deg chamfer on the four edges of the closed (+Y) tip.
+        // Each cutter is a small cube rotated 45 deg about the edge axis
+        // and centered on the edge so half its body sticks out past the
+        // end, removing a triangular prism of depth `chamf`.
+        cutter = chamf * sqrt(2);
+
+        // X-running edges: top (+Z) and bottom (-Z) of the +Y face.
+        for (sz = [+1, -1]) {
+            translate([0, cap_len, sz * od/2])
+                rotate([45, 0, 0])
+                    cube([od * 3, cutter, cutter], center = true);
+        }
+        // Z-running edges: left (-X) and right (+X) of the +Y face.
+        for (sx = [+1, -1]) {
+            translate([sx * od/2, cap_len, 0])
+                rotate([0, 0, 45])
+                    cube([cutter, cutter, od * 3], center = true);
+        }
+
+        if (label != "") {
+            // Label on the top face, anchored right at the socket (-Y)
+            // rim. valign="bottom" pins the bottom of the glyphs to the
+            // socket_depth line, so the text grows outward toward the
+            // closed end and stays well clear of the chamfer.
+            translate([0, 1, od/2 - label_depth])
+                linear_extrude(height = label_depth + 0.2)
+                    text(
+                        text   = label,
+                        size   = label_size,
+                        halign = "center",
+                        valign = "bottom",
+                        font   = "Liberation Sans:style=Bold"
+                    );
         }
     }
 }
@@ -246,10 +320,25 @@ module quad_x_element(
 // boom_segment - short square boom stub with a male plug on +Y and a
 // female socket on -Y. Mates into the X hub's square through-socket on
 // adjacent X elements. Segments never couple directly to each other.
-module boom_segment(seg_len, boom_dia) {
+//
+// label_minus / label_plus: short tags embossed on the top (+Z) face
+// near the -Y and +Y ends respectively, indicating which X element
+// each end plugs into (e.g. "R" and "D"). Empty string disables.
+// label_center_1 / label_center_2: optional two-line vanity text
+// embossed in the middle of the top face (e.g. "EA4IPW" / "OpenQuad").
+module boom_segment(
+    seg_len, boom_dia,
+    label_minus = "", label_plus = "",
+    label_center_1 = "", label_center_2 = ""
+) {
     od   = boom_dia + 2 * hub_wall;    // outer side of the segment body
     plug = boom_dia - print_gap;       // male plug side (fits into socket)
     soc  = boom_dia + print_gap;       // female socket side (accepts plug)
+
+    // Text sits at z = od/2, extruded downward by label_depth. Place
+    // each label close to its own border (just inside the rim) so the
+    // two ends read clearly even on short segments.
+    label_inset = label_size * 0.75;
 
     difference() {
         union() {
@@ -265,6 +354,54 @@ module boom_segment(seg_len, boom_dia) {
         // Female socket on -Y end (cut inward along +Y from the -Y face).
         translate([-soc/2, 0, -soc/2])
             cube([soc, socket_depth, soc]);
+
+        // Labels on the top face, near each end (past the socket/plug).
+        if (label_minus != "") {
+            translate([0, label_inset, od/2 - label_depth])
+                linear_extrude(height = label_depth + 0.2)
+                    text(
+                        text   = label_minus,
+                        size   = label_size,
+                        halign = "center",
+                        valign = "center",
+                        font   = "Liberation Sans:style=Bold"
+                    );
+        }
+        if (label_plus != "") {
+            translate([0, seg_len - label_inset, od/2 - label_depth])
+                linear_extrude(height = label_depth + 0.2)
+                    text(
+                        text   = label_plus,
+                        size   = label_size,
+                        halign = "center",
+                        valign = "center",
+                        font   = "Liberation Sans:style=Bold"
+                    );
+        }
+
+        // Two-line vanity text centered on the body. Smaller than the
+        // end tags to fit within the narrow boom width; each line reads
+        // along the boom length (X-axis after lay-flat).
+        if (label_center_1 != "" || label_center_2 != "") {
+            center_size = label_size * 0.95;
+            row_spacing = center_size * 1.2;
+            center_y    = seg_len / 2;
+            for (row = [[label_center_1, +row_spacing / 2],
+                        [label_center_2, -row_spacing / 2]]) {
+                if (row[0] != "") {
+                    translate([row[1], center_y, od/2 - label_depth])
+                        rotate([0, 0, 90])
+                        linear_extrude(height = label_depth + 0.2)
+                            text(
+                                text   = row[0],
+                                size   = center_size,
+                                halign = "center",
+                                valign = "center",
+                                font   = "Liberation Sans:style=Bold"
+                            );
+                }
+            }
+        }
     }
 }
 
@@ -277,32 +414,85 @@ module boom_segment(seg_len, boom_dia) {
 // X element rotated so the rod fan lies in the XY plane (flat on the bed).
 // Native X has boom axis along Y and rods in XZ; rotating -90 deg around X
 // sends the boom axis to Z (boom sticks up) and the rods into XY.
-module _x_lay_flat(rod_len, rod_side, boom_dia, hub_side, hub_height, driven) {
-    rotate([-90, 0, 0])
-        quad_x_element(
-            rod_len    = rod_len,
-            rod_side   = rod_side,
-            boom_dia   = boom_dia,
-            hub_side   = hub_side,
-            hub_height = hub_height,
-            driven     = driven
+module _x_lay_flat(rod_len, rod_side, boom_dia, hub_side, hub_height, driven, label = "") {
+    // Lay the X flat on the bed (rods spread in XY, boom axis along Z),
+    // then carve the label into the top (+Z) face of the +X rod so the
+    // text is visible looking straight down at the print bed.
+    difference() {
+        rotate([-90, 0, 0])
+            quad_x_element(
+                rod_len    = rod_len,
+                rod_side   = rod_side,
+                boom_dia   = boom_dia,
+                hub_side   = hub_side,
+                hub_height = hub_height,
+                driven     = driven,
+                label      = ""
+            );
+
+        // Label cut on the top face of the +X rod. Top surface after
+        // lay-flat sits at z = +rod_side/2; we extrude downward from
+        // slightly above so a small overlap guarantees a clean cut.
+        if (label != "") {
+            // Place the text a bit past the hub so it clears the boom
+            // socket boss. label_x = rod root + small margin.
+            label_x = hub_side / 2 + label_size * 0.6;
+            translate([label_x, 0, rod_side / 2 - label_depth])
+                linear_extrude(height = label_depth + 0.2)
+                    text(
+                        text   = label,
+                        size   = label_size,
+                        halign = "center",
+                        valign = "center",
+                        font   = "Liberation Sans:style=Bold"
+                    );
+        }
+    }
+}
+
+// Short identifier for element index i: "R" reflector, "D" driven,
+// "1","2",... directors. Used to emboss each X hub.
+function element_label(i) =
+    (i == 0) ? "R"
+  : (i == 1) ? "D"
+             : str(i - 1);
+
+// Boom segment laid flat with its long axis along +X, starting at origin.
+// The native -Y end (socket) lands at +X=0; +Y end (plug) at +X=seg_len.
+// label_minus -> socket end; label_plus -> plug end.
+module _boom_lay_flat(
+    seg_len, boom_dia,
+    label_minus = "", label_plus = "",
+    label_center_1 = "", label_center_2 = ""
+) {
+    rotate([0, 0, -90])
+        boom_segment(
+            seg_len        = seg_len,
+            boom_dia       = boom_dia,
+            label_minus    = label_minus,
+            label_plus     = label_plus,
+            label_center_1 = label_center_1,
+            label_center_2 = label_center_2
         );
 }
 
-// Boom segment laid flat with its long axis along +X, starting at origin.
-module _boom_lay_flat(seg_len, boom_dia) {
+// End-cap boom laid flat along +X. Plug lands at +X=cap_len (plug points
+// outward in +X after the -90 deg rotation around Z).
+module _endcap_lay_flat(cap_len, boom_dia, label = "") {
     rotate([0, 0, -90])
-        boom_segment(seg_len = seg_len, boom_dia = boom_dia);
+        boom_endcap(cap_len = cap_len, boom_dia = boom_dia, label = label);
 }
 
 if (render_part == "x") {
-    quad_x_element(
-        rod_len     = rod_len,
-        rod_side    = rod_side,
-        boom_dia    = boom_dia,
-        hub_side    = hub_side,
-        hub_height  = hub_height,
-        driven      = driven_element
+    // Single X: lay flat so the label is readable on top of the +X rod.
+    _x_lay_flat(
+        rod_len    = rod_len,
+        rod_side   = rod_side,
+        boom_dia   = boom_dia,
+        hub_side   = hub_side,
+        hub_height = hub_height,
+        driven     = driven_element,
+        label      = element_label(element_index)
     );
 } else if (render_part == "boom") {
     boom_segment(seg_len = seg_len, boom_dia = boom_dia);
@@ -340,7 +530,8 @@ if (render_part == "x") {
                     boom_dia   = boom_dia,
                     hub_side   = hub_side,
                     hub_height = hub_height,
-                    driven     = (i == 1)
+                    driven     = (i == 1),
+                    label      = element_label(i)
                 );
     }
 
@@ -348,16 +539,44 @@ if (render_part == "x") {
     // stacked along -Y so longer segments don't collide with shorter ones.
     // An extra segment of length handle_len is added at the end to serve
     // as a mast/handle that plugs into the reflector's back socket.
+    // Labels show which X element each end plugs into.
     num_segs     = len(spacings);
     boom_pitch_y = boom_dia + 2 * hub_wall + gap;
     booms_y0     = -(boom_dia + 2 * hub_wall) / 2 - gap;
     for (i = [0 : num_segs - 1]) {
+        // segment[i] connects element_label(i) (-Y end) to element_label(i+1) (+Y end).
         translate([0, booms_y0 - i * boom_pitch_y, 0])
-            _boom_lay_flat(seg_len = spacings[i]-total_h, boom_dia = boom_dia);
+            // Center-to-center X-hub spacing must equal spacings[i].
+            // The chain is [seg body | X hub through-socket | next seg body];
+            // the X hub consumes hub_height (= rod_side) between bodies,
+            // so seg body length = target spacing - hub_height.
+            _boom_lay_flat(
+                seg_len     = spacings[i] - hub_height,
+                boom_dia    = boom_dia,
+                label_minus = element_label(i),
+                label_plus  = element_label(i + 1)
+            );
     }
-    // Mast/handle segment.
+    // Mast/handle segment: plug end goes into the reflector.
+    // Stamped with an EA4IPW / OpenQuad attribution on the top face.
     translate([0, booms_y0 - num_segs * boom_pitch_y, 0])
-        _boom_lay_flat(seg_len = handle_len, boom_dia = boom_dia);
+        _boom_lay_flat(
+            seg_len        = handle_len,
+            boom_dia       = boom_dia,
+            label_minus    = "H",
+            label_plus     = "R",
+            label_center_1 = "EA4IPW",
+            label_center_2 = "OpenQuad"
+        );
+
+    // End-cap: plugs into the last director's free (+Y) socket to seal
+    // the front of the boom. The plug is the +X end after lay-flat.
+    translate([0, booms_y0 - (num_segs + 1) * boom_pitch_y, 0])
+        _endcap_lay_flat(
+            cap_len  = endcap_len,
+            boom_dia = boom_dia,
+            label    = str(num_directors)
+        );
 } else {
     assert(false,
         str("render_part must be \"x\", \"boom\", or \"all\", got: ", render_part));
