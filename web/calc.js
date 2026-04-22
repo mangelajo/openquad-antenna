@@ -19,8 +19,18 @@ export const CONSTANTS = {
   director:  0.991, // k_director_1 = k_driven × 0.970
 };
 export const DIRECTOR_RATIO = 0.97;
-export const SPACING_R_DE = 0.20;
-export const SPACING_DIR = 0.15;
+// Spacing modes (see docs/TEORIA.es.md §1.6 for the NEC2 comparison).
+export const SPACING_MODES = {
+  // ARRL / Orr & Cowan — max gain
+  maxgain: { r_de: 0.200, dir: 0.150 },
+  // Classic W6SAI / YT1VP — better max F/B (~4.5 dB more at optimum)
+  maxfb:   { r_de: (730 * 0.25) / 983.5714, dir: (600 * 0.25) / 983.5714 },
+};
+export const DEFAULT_SPACING_MODE = 'maxgain';
+
+// Convenience aliases (default mode) for code that still reads them directly.
+export const SPACING_R_DE = SPACING_MODES.maxgain.r_de;
+export const SPACING_DIR  = SPACING_MODES.maxgain.dir;
 
 // Hub geometry (from src/all_in_one.scad): collar extends boom_around=3 mm
 // total around the boom; clamp sits clamp_collar_gap=0.85 mm outside the collar.
@@ -129,15 +139,16 @@ export function performanceFor(totalElements) {
 // Returns an array of spacing records with { type, i?, j?, distance, accumulated }.
 // type is one of "r-de" | "de-d1" | "d-d" (for director N → N+1, i and j are the indices).
 // UI layer turns `type` + indices into a localized label.
-export function buildSpacings(freq, numDirectors) {
+export function buildSpacings(freq, numDirectors, spacingMode = DEFAULT_SPACING_MODE) {
   const lambda = C_MM_MHZ / freq;
+  const sp = SPACING_MODES[spacingMode] ?? SPACING_MODES[DEFAULT_SPACING_MODE];
   const out = [];
-  out.push({ type: "r-de", distance: lambda * SPACING_R_DE });
+  out.push({ type: "r-de", distance: lambda * sp.r_de });
   if (numDirectors >= 1) {
-    out.push({ type: "de-d1", distance: lambda * SPACING_DIR });
+    out.push({ type: "de-d1", distance: lambda * sp.dir });
   }
   for (let i = 1; i < numDirectors; i++) {
-    out.push({ type: "d-d", i, j: i + 1, distance: lambda * SPACING_DIR });
+    out.push({ type: "d-d", i, j: i + 1, distance: lambda * sp.dir });
   }
   let acc = 0;
   return out.map(s => { acc += s.distance; return { ...s, accumulated: acc }; });
