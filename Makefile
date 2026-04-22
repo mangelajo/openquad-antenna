@@ -13,7 +13,7 @@ DOCS_IMG_DIR := docs/images/generated
 STLS := $(BUILD)/all_in_one.stl $(BUILD)/driven_element.stl $(BUILD)/regular_wire_clamp.stl
 PNGS := $(STLS:.stl=.png)
 
-.PHONY: help all matrix zip renders docs-images test serve clean nfq
+.PHONY: help all matrix zip renders docs-images test serve clean nfq gallery gallery-data gallery-clean
 
 # Calculator / web app
 NODE    ?= node
@@ -193,3 +193,30 @@ serve: ## Serve web/ locally (default port 8765; override with PORT=…)
 
 clean: ## Remove the build/ directory
 	rm -rf $(BUILD)
+
+# ── NEC2 gallery ────────────────────────────────────────────────────────────
+# Requires nec2c on PATH and matplotlib+numpy installed for $(PYTHON).
+# Override with: make gallery PYTHON=.venv/bin/python3 GALLERY_FREQ=435
+PYTHON         ?= python3
+GALLERY_FREQ   ?= 435
+GALLERY_ELEMS  ?= 5
+GALLERY_DATA   := docs/images/gallery/data
+GALLERY_OUT    := docs/images/gallery
+GALLERY_CSVS   := $(GALLERY_DATA)/spacing_sweep.csv \
+                  $(GALLERY_DATA)/reflector_tuning.csv \
+                  $(GALLERY_DATA)/impedance_sweep.csv \
+                  $(GALLERY_DATA)/patterns.csv
+
+$(GALLERY_CSVS): tools/nec2_spacing_analysis.py
+	@command -v nec2c >/dev/null || { echo "nec2c not found on PATH. Install with 'brew install nec2c' or 'apt install nec2c'."; exit 1; }
+	$(PYTHON) tools/nec2_spacing_analysis.py --freq $(GALLERY_FREQ) \
+	    --elements $(GALLERY_ELEMS) --full-data-dump $(GALLERY_DATA)
+
+gallery-data: $(GALLERY_CSVS) ## Run NEC2 simulations and dump CSVs (slow, ~2 min)
+
+gallery: gallery-data ## Render multi-language NEC2 plot gallery (PNGs per lang)
+	$(PYTHON) tools/nec2_plot_gallery.py $(GALLERY_DATA) \
+	    --out-dir $(GALLERY_OUT) --freq-target $(GALLERY_FREQ)
+
+gallery-clean: ## Remove generated gallery PNGs and CSVs
+	rm -rf $(GALLERY_OUT)
