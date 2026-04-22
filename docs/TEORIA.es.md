@@ -94,6 +94,52 @@ Donde λ = 299,792.458 / f(MHz) es la longitud de onda en el vacío.
 
 **Importante:** Los espaciados dependen de la longitud de onda en el espacio libre, NO del velocity factor del cable. El boom siempre mide lo mismo independientemente del tipo de cable que uses para los elementos.
 
+### 1.6. Elección del espaciado reflector→driven: compromiso ganancia vs F/B
+
+Existe cierta dispersión en la bibliografía respecto al espaciado óptimo entre el reflector y el
+driven. Las dos referencias más habituales son:
+
+| Fuente | R→Driven | Directores | Objetivo de diseño |
+|---|---|---|---|
+| ARRL Antenna Book / Orr & Cowan | **0.200 λ** | 0.150 λ | Máxima ganancia |
+| W6SAI / calculadoras clásicas (e.g. YT1VP) | **0.186 λ** | 0.153 λ | Compromiso ganancia/F/B |
+
+El valor 0.186 λ de las calculadoras clásicas procede de la constante histórica `730 ft·MHz`
+expresada en unidades imperiales:
+
+    spacing_pies = 730 / f(MHz) × 0.25  →  spacing/λ = 730×0.25 / 983.57 ≈ 0.1855 λ
+
+#### Resultado de la simulación NEC2 (5 elementos, 435 MHz)
+
+Se realizó un barrido de k_reflector con `nec2c` para ambas configuraciones de espaciado.
+El modelo replica la geometría real de la MOQUAD: **loops en orientación diamante (45°)**,
+con feed en el vértice inferior (S-corner) para polarización horizontal.
+Los resultados muestran que la diferencia de ganancia entre ambos espaciados es
+**despreciable** (< 0.05 dBi), mientras que el F/B máximo alcanzable sí varía:
+
+| Configuración | k_refl óptimo | Ganancia pico | F/B máximo |
+|---|---|---|---|
+| OpenQuad 0.200 λ | 1.110 | 10.10 dBi (7.95 dBd) | **37.8 dB** |
+| YT1VP  0.186 λ | 1.108 | 10.12 dBi (7.97 dBd) | **42.3 dB** |
+
+Con el k_refl nominal (1.047) ambas configuraciones dan prácticamente el mismo resultado:
+~10.1 dBi y ~7.2 dB de F/B. La diferencia de F/B sólo emerge cuando el reflector se ajusta
+hacia el punto de cancelación máxima (reflector más largo → mayor desfase inductivo).
+
+**Conclusión práctica:** para una construcción típica en la que se ajusta la longitud del
+reflector mediante el stub o recortando el loop, el espaciado más corto de las calculadoras
+clásicas ofrece **~4.5 dB más de F/B** en el punto óptimo con la misma ganancia. Si el objetivo
+prioritario es el F/B (rechazo de interferencias, EME, contests de dirección fija), usa 0.186 λ;
+si el objetivo es la máxima ganancia con F/B suficiente, usa 0.200 λ.
+
+El script NEC2 que genera este análisis se encuentra en `tools/nec2_spacing_analysis.py`
+(ver sección §6 de este documento).
+
+> **Referencias:** ver §5 — Cebik W4RNL *Cubical Quad Notes* vol. 1, cap. 3
+> (https://antenna2.github.io/cebik/content/bookant.html); ARRL Antenna Book cap. 12;
+> Tom Rauch W8JI — "Cubical Quad Antenna" (https://www.w8ji.com/quad_cubical_quad.htm);
+> W6SAI *All About Cubical Quad Antennas*, págs. 44–52.
+
 ---
 
 ## 2. El Velocity Factor (Vf): por qué importa y cómo calcularlo
