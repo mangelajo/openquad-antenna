@@ -194,6 +194,23 @@ test('buildSpacings boom length matches README.es.md §2 (435 MHz, 5-elem)', () 
   assert.ok(Math.abs(boom - 448.3) < 0.5, `boom=${boom.toFixed(2)} mm, expected 448.3`);
 });
 
+test('buildSpacings honours the maxfb mode (0.186 λ R→DE, 0.153 λ directors)', () => {
+  const sp = buildSpacings(435, 3, 'maxfb');
+  // λ @ 435 MHz = 689.18 mm; R→DE ≈ 0.1855 × λ ≈ 127.9 mm, dir ≈ 0.1525 × λ ≈ 105.1 mm
+  assert.ok(Math.abs(sp[0].distance - 127.9) < 0.5, `R→DE=${sp[0].distance.toFixed(2)}, expected ~127.9`);
+  assert.ok(Math.abs(sp[1].distance - 105.1) < 0.5, `dir=${sp[1].distance.toFixed(2)}, expected ~105.1`);
+});
+
+test('buildSpacings default (maxgain) matches the legacy behaviour', () => {
+  const sp = buildSpacings(435, 3, 'maxgain');
+  // 0.200 × 689.18 ≈ 137.8 mm ; 0.150 × 689.18 ≈ 103.4 mm
+  assert.ok(Math.abs(sp[0].distance - 137.8) < 0.5, `R→DE=${sp[0].distance.toFixed(2)}, expected ~137.8`);
+  assert.ok(Math.abs(sp[1].distance - 103.4) < 0.5, `dir=${sp[1].distance.toFixed(2)}, expected ~103.4`);
+  // Unknown mode falls back to maxgain.
+  const spFallback = buildSpacings(435, 3, 'bogus');
+  assert.equal(sp[0].distance, spFallback[0].distance);
+});
+
 test('performanceFor returns null below 2 elements, table values for 2..7', () => {
   assert.equal(performanceFor(0), null);
   assert.equal(performanceFor(1), null);
