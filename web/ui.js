@@ -5,6 +5,7 @@ import {
   MM_PER_INCH,
   C_MM_MHZ,
   DBD_TO_DBI,
+  SPACING_MODES,
   buildElements,
   buildSpacings,
   performanceFor,
@@ -52,6 +53,10 @@ const LANGS = {
     "sec1.vf-initial": "Vf inicial (cable)",
     "sec1.num-directors": "Nº de directores",
     "sec1.boom-dim": "Diámetro/lado del boom (mm)",
+    "sec1.spacing-mode": "Modo de espaciado",
+    "sec1.spacing-maxgain": "Máx. ganancia  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Máx. F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `Afecta solo al largo del boom — ver <a href="${T_es}#16-elección-del-espaciado-reflectordrivencompromiso-ganancia-vs-fb">TEORIA §1.6</a>.`,
     "sec1.hint": "Por defecto Vf = 0.99 (cobre desnudo al aire; el vacío teórico sería 1.00). El procedimiento recomendado es construir con este valor, medir, y recalcular abajo. Si ya conoces el Vf real de tu cable (ej. 0.91 para PVC fino), introdúcelo directamente.",
     "sec2.title-prefix": "2. Dimensiones iniciales (Vf =",
     "stat.elements": "Elementos totales",
@@ -120,6 +125,10 @@ const LANGS = {
     "sec1.vf-initial": "Initial Vf (wire)",
     "sec1.num-directors": "Number of directors",
     "sec1.boom-dim": "Boom diameter/side (mm)",
+    "sec1.spacing-mode": "Spacing mode",
+    "sec1.spacing-maxgain": "Max gain  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Max F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `Affects boom length only — see <a href="${T_en}#16-choice-of-reflector-driven-spacing-gain-vs-fb-tradeoff">TEORIA §1.6</a>.`,
     "sec1.hint": "Default Vf = 1.0 (bare copper, maximum length). The recommended procedure is to build with Vf = 1.0, measure, and recalculate below. If you already know the real Vf of your wire (e.g. 0.91 for thin PVC), enter it directly.",
     "sec2.title-prefix": "2. Initial dimensions (Vf =",
     "stat.elements": "Total elements",
@@ -188,6 +197,10 @@ const LANGS = {
     "sec1.vf-initial": "Vf iniziale (cavo)",
     "sec1.num-directors": "N° di direttori",
     "sec1.boom-dim": "Diametro/lato del boom (mm)",
+    "sec1.spacing-mode": "Modalità spaziatura",
+    "sec1.spacing-maxgain": "Max gain  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Max F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `Incide solo sulla lunghezza del boom — vedi <a href="${T_it}">TEORIA §1.6</a>.`,
     "sec1.hint": "Default Vf = 1.0 (rame nudo, lunghezza massima). La procedura consigliata è costruire con Vf = 1.0, misurare e ricalcolare sotto. Se conosci già il Vf reale del tuo cavo (es. 0.91 per PVC sottile), inseriscilo direttamente.",
     "sec2.title-prefix": "2. Dimensioni iniziali (Vf =",
     "stat.elements": "Elementi totali",
@@ -256,6 +269,10 @@ const LANGS = {
     "sec1.vf-initial": "Vf inicial (cabo)",
     "sec1.num-directors": "Nº de diretores",
     "sec1.boom-dim": "Diâmetro/lado do boom (mm)",
+    "sec1.spacing-mode": "Modo de espaçamento",
+    "sec1.spacing-maxgain": "Máx. ganância  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Máx. F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `Afeta apenas o comprimento do boom — ver <a href="${T_pt}">TEORIA §1.6</a>.`,
     "sec1.hint": "Por omissão Vf = 1.0 (cobre nu, comprimento máximo). O procedimento recomendado é construir com Vf = 1.0, medir, e recalcular abaixo. Se já conheces o Vf real do teu cabo (ex. 0.91 para PVC fino), introduz-o diretamente.",
     "sec2.title-prefix": "2. Dimensões iniciais (Vf =",
     "stat.elements": "Elementos totais",
@@ -324,6 +341,10 @@ const LANGS = {
     "sec1.vf-initial": "初期 Vf（ケーブル）",
     "sec1.num-directors": "ディレクター数",
     "sec1.boom-dim": "ブーム直径／辺長 (mm)",
+    "sec1.spacing-mode": "Spacing mode",
+    "sec1.spacing-maxgain": "Max gain  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Max F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `See <a href="${T_en}">TEORIA §1.6</a>.`,
     "sec1.hint": "デフォルトは Vf = 1.0（裸銅線、最大長）。推奨手順は Vf = 1.0 で製作し、測定後に下で再計算することです。ケーブルの実 Vf がすでに分かっている場合（例: 薄い PVC で 0.91）、直接入力してください。",
     "sec2.title-prefix": "2. 初期寸法 (Vf =",
     "stat.elements": "総エレメント数",
@@ -392,6 +413,10 @@ const LANGS = {
     "sec1.vf-initial": "初始 Vf（导线）",
     "sec1.num-directors": "引向器数量",
     "sec1.boom-dim": "主梁直径/边长 (mm)",
+    "sec1.spacing-mode": "Spacing mode",
+    "sec1.spacing-maxgain": "Max gain  (0.200 λ — ARRL/Orr)",
+    "sec1.spacing-maxfb":   "Max F/B  (0.186 λ — W6SAI/YT1VP, +4.5 dB F/B)",
+    "sec1.spacing-hint": `See <a href="${T_en}">TEORIA §1.6</a>.`,
     "sec1.hint": "默认 Vf = 1.0（裸铜，最大长度）。推荐流程是用 Vf = 1.0 制作，测量后在下方重新计算。如果已知导线的实际 Vf（如薄 PVC 为 0.91），可直接输入。",
     "sec2.title-prefix": "2. 初始尺寸 (Vf =",
     "stat.elements": "总元件数",
@@ -655,6 +680,7 @@ function recompute() {
   const numDirectors = parseInt($("num-directors").value, 10);
   const freqMeasured = parseFloat($("freq-measured").value);
   const boomDim = parseFloat($("boom-dim").value);
+  const spacingMode = $("spacing-mode").value;
 
   if (!isFinite(freq) || freq <= 0 || !isFinite(vfInitial) || vfInitial <= 0
       || !isFinite(numDirectors) || numDirectors < 0
@@ -667,7 +693,7 @@ function recompute() {
   const initial = buildElements(freq, vfInitial, numDirectors, boomDim);
   renderInitialTable(initial);
 
-  const spacings = buildSpacings(freq, numDirectors);
+  const spacings = buildSpacings(freq, numDirectors, spacingMode);
   renderSpacingsTable(spacings);
   renderStats(freq, numDirectors, spacings, initial);
 
@@ -693,6 +719,7 @@ function recompute() {
 ["freq", "vf-initial", "num-directors", "freq-measured", "boom-dim"].forEach(id => {
   $(id).addEventListener("input", recompute);
 });
+$("spacing-mode").addEventListener("change", recompute);
 
 const langSelect = $("lang-select");
 langSelect.addEventListener("change", e => applyLang(e.target.value));
